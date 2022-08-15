@@ -79,7 +79,8 @@ Någon genomgång med övning (oftast), repetition, tid att jobba ihop
 
 # Dagens kurs
 
-* Repetion allmänt om Linux Repetition om användare
+* Repetion allmänt om Linux
+* Repetition om användare
 * Repetition / bli varm igen grunderna för shell scripts
 * Genomgång av gruppuppgiften
 
