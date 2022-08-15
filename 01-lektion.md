@@ -7,7 +7,7 @@ footer: Nackademin HT 2022 • Linux 2 DEVOPS21 • Alloverse AB
 ---
 <!-- _class: - gaia -->
 
-# <!--fit--> Linux 2 <br> DEVOPS21 
+# <!--fit--> Linux 2 <br> DEVOPS 2021
 ## Lektion 1
 
 ---
