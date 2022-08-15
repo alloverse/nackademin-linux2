@@ -1,11 +1,3 @@
----
-marp: false
-title: Lektionsplanering för Linux 2 DEVOPS21
-theme: gaia
-paginate: false
-footer: Nackademin HT 2022 • Linux 2 DEVOPS21 • Alloverse AB
----
-
 # Lektionsplan Linux 2 DEVOPS21
 
 Planeringen kommer att justeras löpande utifrån tidsåtgång och återkoppling under kursens gång. Varje lektion kommer bestå av genomgångar varvade med praktiska övningar.
