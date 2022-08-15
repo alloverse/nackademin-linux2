@@ -17,7 +17,8 @@ Alla studenter förväntas ha en egen Linux-installation att labba med. Det går
 
 ## Lektion 1
 * Introduktion – presentation, kursens upplägg etc
-* Repetition: Användare och användarrättigheter, ssh, inloggningar * Repetition: shell scripts
+* Repetition: Användare och användarrättigheter, ssh, inloggningar
+* Repetition: shell scripts
 * Presentation av gruppuppgift
 
 ## Lektion 2
