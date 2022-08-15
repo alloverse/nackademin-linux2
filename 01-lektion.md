@@ -1,14 +1,13 @@
 ---
 marp: true
-title: Linux 2 DEVOPS 2022, Lektion 1
-description: Hosting Marp slide deck on the web
+title: Linux 2 DEVOPS21, Lektion 1
 theme: gaia
 paginate: true
-footer: Nackademin HT 2022 • Linux 2 DEVOPS20 • Alloverse AB
+footer: Nackademin HT 2022 • Linux 2 DEVOPS21 • Alloverse AB
 ---
 <!-- _class: - gaia -->
 
-# <!--fit--> Linux 2 <br> DEVOPS 2022 
+# <!--fit--> Linux 2 <br> DEVOPS21 
 ## Lektion 1
 
 ---
