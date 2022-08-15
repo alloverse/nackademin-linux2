@@ -28,7 +28,7 @@ footer: Nackademin HT 2022 • Linux 2 DEVOPS20 • Alloverse AB
 ## Utbildningserfarenhet
 
 * CoderDojo, MobileBridge, hobbyistlärare
-* Mitt första lärarjobb!
+* Detta är mitt första betalda lärarjobb
 
 ---
 
@@ -137,7 +137,7 @@ Uppvärmningsövning:
 1. Logga på din Linux-installation
 2. Se ditt användarnamn med whoami
 3. Hitta dig själv i `/etc/passwd` (kommer ni ihåg grep?)
-4. Hitta dig själv i `/etc/shadow` (här behöver du se till att ha rätt att läsa i den)
+4. Hitta dig själv i `/etc/shadow` (här behöver du se till att ha rättigheter att läsa den)
 ---
 
 #  Övning 1
@@ -185,8 +185,8 @@ Bild från www.cyberciti.biz
 
 # Användargrupper
 
-* /etc/group
-* En användare har en primär grupp och inga eller flera sekundära grupper
+* `/etc/group`
+* En användare har en primär grupp och noll eller fler sekundära grupper
 
 ```shell
 $ sudo useradd -a -G <groupname> <username>
@@ -312,7 +312,7 @@ li {
 * Använder sig av publik nyckel-kryptering
 * `ssh-keygen` för att skapa nyckelpar (rsa är standard)
     *  Utöver RSA finns: DSA, ECDSA, Ed25519 
-    * Defaultport 22
+* Defaultport 22
 
 ---
 # ssh
@@ -447,8 +447,8 @@ done
 * Uppgiften utförs i grupp, helst 3-4 personer
 * Att genomföra uppgiften är ett krav för godkänd kurs
 * De som gör en godkänd redovisning på någon av de avsatta tiderna sista kursveckan får dessutom 2 bonuspoäng på tentan
-    * Sikta på att redovisa tisdag 13/9!
-    * Reservtider för redovisning onsdag 14/9 (förmiddag)
+    * Sikta på att redovisa onsdag 14/9!
+    * Reservtider för redovisning torsdag 15/9
 
 ---
 
