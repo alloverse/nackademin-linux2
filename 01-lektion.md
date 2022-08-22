@@ -20,6 +20,7 @@ footer: Nackademin HT 2022 • Linux 2 DEVOPS21 • Alloverse AB
 * Spotify AB: iPhone-apputveckling
 * Lookback Inc.: Grundare, CTO
 * Alloverse AB: Grundare, CEO, CTO 
+* Kört Unix sedan garderobsserver på 90-talet
 
 ---
 
@@ -27,7 +28,22 @@ footer: Nackademin HT 2022 • Linux 2 DEVOPS21 • Alloverse AB
 ## Utbildningserfarenhet
 
 * CoderDojo, MobileBridge, hobbyistlärare
-* Detta är mitt första betalda lärarjobb
+* Detta är mitt första betalda lärarjobb -- var snälla 😅 
+* Frågor till/om mig?
+
+---
+
+# Installera Linux
+
+* USB-minnen finns här framme
+* Ubuntu 20.04 LTS, men välj eget om ni vill
+* Annat än Debian-baserat blir jobbigt, men funkar (ni får anpassa)
+
+---
+
+# Presentation: Vilka är ni? :)
+
+
 
 ---
 
@@ -37,6 +53,8 @@ footer: Nackademin HT 2022 • Linux 2 DEVOPS21 • Alloverse AB
 * Server-fokus, kommandorad
 * Alla förväntas ha en egen Linux-installation att labba med
 * Exempel är mestadels på Ubuntu
+
+## Låt oss kolla kursplanen!
 
 ---
 
@@ -144,9 +162,9 @@ Uppvärmningsövning:
 
 ```shell
 $ grep mo /etc/passwd
-niklas:x:1000:1000:Niklas Engvall:/home/niklas:/bin/bash
-$ sudo grep niklas /etc/shadow
-niklas: $6$GKKkA67j$EgFKNA904ycLM.LwVIMcFEjmYpef4ohkw.
+nevyn:x:1000:1000:nevyn Engvall:/home/nevyn:/bin/bash
+$ sudo grep nevyn /etc/shadow
+nevyn: $6$GKKkA67j$EgFKNA904ycLM.LwVIMcFEjmYpef4ohkw.
 nCHecAGrnk4EeoD05VY690NqgL95LjR0Tz5wyq4NddQvi
 H1mOnI1:16190:0:99999:7:::
 ```
@@ -207,7 +225,7 @@ $ sudo groupadd <groupname>
 
 * Nu gör vi ett litet script...
 * Gör ett script usercheck.sh som tar en inparameter och letar efter denna som användarnamn i `/etc/passwd` och `/etc/group`, samt skriver ut de raderna
-    * Användning exempel: `$ usercheck.sh niklas`
+    * Användning exempel: `$ usercheck.sh nevyn`
     * Det får vara grovt och hitta även andra rader än de man är ute efter
 
 
