@@ -279,7 +279,7 @@ done
 *  Lägg till i slutet av fil1 (append):
    * `echo ”hej” >> fil1`
 * Skicka stderr till en fil med `2>`
-   * `echo ”hej” >> fil1 2> &1`
+   * `echo ”hej” >> fil1 2>&1`
 *  Input från fil1:
    * `cat < fil1`
 
@@ -332,7 +332,7 @@ done < fil1 > fil2
 # Använda `sed` istället!
 
 * Som scriptet nyss:
-   * `sed 's/Milou/Milou Hund/g' < fil1 > fil2
+   * `sed 's/Milou/Milou Hund/g' < fil1 > fil2`
 * Eller gör ersättningen i samma fil:
    * `sed -i -e 's/Milou/Milou Hund/g' fil1`
 
@@ -373,16 +373,28 @@ done
 
 ---
 
-# Överföra filer: ftp, scp
+# Överföra filer: `ftp`, `scp`
 
 * `ftp` - Osäkert (allt i klartext) och krångligt (kontrollkanal och datakanal)
 * `scp` - tänk `cp` över `ssh`
-   * `scp file remote_user@remote_ip:/remote/directory`
-   * `scp remote_user@remote_ip:/remote/directory/file file`
+   * `scp <from> <to>`
+   * `:` betyder "en annan dator", e g `scp lokalfil annandator:distansfil`
+   * ladda upp: `scp file <user>@<host>:</some/file>`
+   * ladda ner: `scp <user>@<host>:</some/file> <dest>`
 
 ---
 
-# Överföra filer: sftp
+# Överföra filer: `rsync`, en bättre `scp`
+
+* Bra för backup och nerladdning av kod -- laddar bara upp/ner filer som skiljer sig från den andra datorn!
+* `-r` betyder "rekursivt", dvs kopiera allt i mappen. `-a` samma plus behåller modifikations-datum och andra flaggor
+* `-z` komprimerar innan överföring: tar mer CPU men sparar bandbredd
+* `--delete`: filer raderas remote om de tagits bort lokalt. 
+* Exempel:  `rsync -avz --delete ./src serv:/u/src` 
+
+---
+
+# Överföra filer: `sftp`
 
 * `sftp` - tänk `SSL/TLS-säkrad ftp`
    * `sftp remote_user@remote_ip`
