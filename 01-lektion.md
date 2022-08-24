@@ -125,6 +125,8 @@ _(Bild: FOSS History)_
 * Allt är filer
 * Allt kan anpassas
 
+ps. glöm inte `man`! 
+
 ---
 
 <style scoped>
@@ -162,7 +164,7 @@ Uppvärmningsövning:
 
 ```shell
 $ grep mo /etc/passwd
-nevyn:x:1000:1000:nevyn Engvall:/home/nevyn:/bin/bash
+nevyn:x:1000:1000:nevyn Bengtsson:/home/nevyn:/bin/fish
 $ sudo grep nevyn /etc/shadow
 nevyn: $6$GKKkA67j$EgFKNA904ycLM.LwVIMcFEjmYpef4ohkw.
 nCHecAGrnk4EeoD05VY690NqgL95LjR0Tz5wyq4NddQvi
@@ -195,9 +197,9 @@ Bild från www.cyberciti.biz
 
 # Lägg till användare
  
-* `sudo adduser <username>`
+* `sudo adduser <username>` -- skapa användare och hem-mapp
 * `sudo useradd <username>` -- ⚠️ skapar inte hem-mapp, etc!
-* `sudo passwd <username>`
+* `sudo passwd <username>` -- byt lösenord på egen ELLER ANNAN användare
 
 ---
 
@@ -216,15 +218,15 @@ $ sudo groupadd <groupname>
 
 # Övning 2
 
-* Titta i /etc/group
+* Titta i `/etc/group`
 * Hitta alla grupper som din användare tillhör
 
 ---
 
 # Övning 3
 
-* Nu gör vi ett litet script...
-* Gör ett script usercheck.sh som tar en inparameter och letar efter denna som användarnamn i `/etc/passwd` och `/etc/group`, samt skriver ut de raderna
+* Nu gör vi ett litet script! Kom ihåg: `#!/bin/bash` och `chmod a+x mittscript.sh` och `./mittscript.sh`.
+* Gör ett script `usercheck.sh` som tar en inparameter och letar efter denna som användarnamn i `/etc/passwd` och `/etc/group`, samt skriver ut de raderna
     * Användning exempel: `$ usercheck.sh nevyn`
     * Det får vara grovt och hitta även andra rader än de man är ute efter
 
@@ -238,11 +240,11 @@ $ sudo groupadd <groupname>
 # simple example script
 # usage: usercheck.sh <username>
 
-user=$1;
-echo "from passwd:";
-grep $user /etc/passwd;
-echo "from group:";
-grep $user /etc/group;
+user=$1
+echo "from passwd:"
+grep $user /etc/passwd
+echo "from group:"
+grep $user /etc/group
 ```
 
 --- 
@@ -264,7 +266,7 @@ Ge sudo-rättigheter:
 
 ```shell
 usermod -a -G sudo <username>
-usermod -aG sudo <username>
+usermod -aG sudo <username> # betyder samma sak
 ```
 
 Alternativt editera /etc/sudoers direkt _(ej rekommenderat, använd /etc/sudoers.d/ och skapa filer som ger rättighter)_:
@@ -292,6 +294,36 @@ su - <username>  # nollställ environment
 * Observera vad den användaren får för grupptillhörighet per default
 * Lägg till användaren i gruppen sudo
 * Testa så du kan göra “su” till den användaren och sedan köra något som sudo (t ex sudo whoami)
+
+---
+
+```bash
+nevyn@nevyn-linux2:~$ sudo adduser nev4
+Adding user `nev4' ...
+Adding new group `nev4' (1004) ...
+Adding new user `nev4' (1004) with group `nev4' ...
+Creating home directory `/home/nev4' ...
+Copying files from `/etc/skel' ...
+New password: 
+Retype new password: 
+passwd: password updated successfully
+Changing the user information for nev4
+Enter the new value, or press ENTER for the default
+	Full Name []: 
+	...
+Is the information correct? [Y/n] 
+nevyn@nevyn-linux2:~$ grep nev4 /etc/group
+nev4:x:1004:
+nevyn@nevyn-linux2:~$ grep nev4 /etc/passwd
+nev4:x:1004:1004:,,,:/home/nev4:/bin/bash
+nevyn@nevyn-linux2:~$ sudo usermod -aG sudo nev4
+nevyn@nevyn-linux2:~$ su nev4
+Password: 
+nev4@nevyn-linux2:/home/nevyn$ sudo ls
+[sudo] password for nev4: 
+Desktop  Documents  Music     Public  Templates
+Dev	 Downloads  Pictures  snap    Videos
+```
 
 ---
 
@@ -376,7 +408,7 @@ li {
     * Exempel: `sum=$((var*2))`
 * for-loop: `for <var> in <list>`
     * Kan också vara en räknare med heltal
-    * Exempel: `for name in `ls``
+    * Exempel: ``` for name in `ls` ```
     * Exempel: `for i in {1..5}`
 * for-do-done
 
@@ -395,8 +427,8 @@ for i in {1..10}
 do
     for j in {1..10}
     do
-        res=$((i*j));
-        echo $i "*" $j "=" $res;
+        res=$((i*j))
+        echo $i "*" $j "=" $res
     done
 done
 ```
@@ -439,13 +471,26 @@ for i in {1..10}
 do
     for j in {1..10}
     do
-        res=$((i*j));
-        echo $i "*" $j "=" $res;
+        res=$((i*j))
+        echo $i "*" $j "=" $res
         if [ $i == $j ]
         then
             echo "hej"
         fi
     done
+done
+```
+
+---
+
+# Script-repetition
+
+* Använd externt verktyg: ``` `ls` ``` eller `$(ls)`
+
+```bash
+for file in `ls`
+do
+    echo "En fil: $file"
 done
 ```
 
