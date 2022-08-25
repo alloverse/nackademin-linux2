@@ -466,6 +466,13 @@ status=0 aid=2)
 
 ---
 
+<style scoped>
+li {
+  font-size: 25px;
+}
+</style>
+
+
 # Övning 7
 
 * Bygg följande funktioner:
@@ -477,9 +484,11 @@ status=0 aid=2)
 ---
 
 ```bash
+$ cat changelogger.sh
 #!/bin/bash
 filename=/var/testfil1
 logfile=/var/log/mytestd/mytestd.log
+rollfile=/var/log/mytestd/mytestd.log.bak
 n=1
 md1=$(md5sum $filename)
 
@@ -492,11 +501,49 @@ do
         timestamp=`date +%Y-%m-%d_%H-%M-%S`
         echo $n ": " $timestamp " file changed" >> $logfile
         n=$((n+1))
+        if [ `wc -l $logfile | awk '{print $1}'` -ge 10 ]
+        then
+            cat $logfile >> $rollfile
+            truncate -s 0 $logfile
+        fi
+
     fi
     md1=$md2
 done
 ```
 
 ---
+
+```
+$ crontab -e
+
+# For more information see the manual pages of crontab(5) and cron(8)
+# 
+# m h  dom mon dow   command
+0   *  *   *   *     rm -f /var/log/mytestd/mytestd.log.bak
+```
+
+---
+
+```
+$ cat /etc/systemd/system/changelogger.service
+[Unit]
+Description=Logs changes to /var/testfil1
+
+[Service]
+User=nevyn
+WorkingDirectory=/tmp
+ExecStart=/home/nevyn/changelogger.sh
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
+
+$ sudo systemctl daemon-reload
+$ sudo systemctl daemon-reload
+```
+
+---
+
 
 Tillbakablick, reflektion, kommentarer ...
