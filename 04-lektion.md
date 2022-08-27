@@ -104,6 +104,7 @@ Använd lämpliga nyss nämnda verktyg till att ta reda på hur din Linux-maskin
 `ifconfig <interface> <ip> <netmask> up`
 e g: `ifconfig eth1 192.168.1.5 netmask 255.255.255.0 up`
 
+--
 `ip addr add <ip>/<mask> dev <interface>`
 `ip link set <network> up`
 
@@ -114,11 +115,67 @@ ip link set eth1 up
 ```
 
 ---
+
+# Övning 2
+
+* Hur gör du för att sätta din Linux-maskins ip- adress till 10.1.1.101 med netmask /24?
+    * Testa förslagsvis bara på ett nätverksinterface som inte är det du använder för din koppling till världen just nu.
+
+---
+
+# Övning 2
+
+`$ sudo ifconfig eth0 10.1.1.101 netmask 255.255.255.0`
+
+![](/img/ifconfig.png)
+
+---
+
+# Se vilka interfaces som är igång?
+
+* `ip addr` och söka efter "state UP"
+* `ifconfig` och söka efter "RUNNING"
+
+---
+
+# Övning 3
+
+Implementera följande:
+
+Två gånger i timmen kontrolleras ifall eth0
+respektive wlan0 är uppe, och resultatet skrivs
+till en log-fil, med tidsstämpel
+
+---
+
+# Övning 3
+
+```bash
+#!/bin/bash
+logfile=/var/log/myiptest.log
+timestamp=`date +%Y-%m-%d_%H-%M-%S`
+ip addr | grep wlan0 | grep "state UP" >/dev/null
+
+if [ $? -eq 0 ]; then
+    echo $timestamp ": wlan0 UP" >> $logfile;
+fi
+```
+
+
+Till crontab:
+`0,30 * * * * /var/scripts/iptest.sh`
+
+
+---
 <!-- _class: - invert - lead -->
 
 # <!--fit--> &nbsp;&nbsp;Email&nbsp;&nbsp;
 # <!--fit--> SMTP, IMAP, POP
 
+---
+
+* simple = evil
+* kör inte din egen server, använd sendgrid el dyl
 ---
 
 <!-- _class: - invert - lead -->
