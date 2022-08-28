@@ -39,7 +39,7 @@ footer: Nackademin HT 2022 • Linux 2 DEVOPS21 • Alloverse AB
 
 # Nätverk
 
-![](/img/osi.png)
+![](img/osi.png)
 
 ---
 
@@ -49,7 +49,7 @@ footer: Nackademin HT 2022 • Linux 2 DEVOPS21 • Alloverse AB
     }
 </style>
 
-![](/img/ipv6.png)
+![](img/ipv6.png)
 
 https://www.youtube.com/watch?v=bNmnRvZW3HU
 
