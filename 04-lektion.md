@@ -334,3 +334,216 @@ password'`
 # <!--fit--> DNS
 
 ---
+
+# Domain Name System, DNS
+
+* Uppslagning av **namn** ➡️ **IP**
+* Hierarkiskt: domäner (`google.com`) under toppdomäner (`.com`)
+* "DNS records"
+
+---
+
+# DNS
+
+![bg 60%](img/dns-delegation-tree.png)
+
+<br><br><br><br><br><br><br>
+_(redhat.com/sysadmin/dns-domain-name-servers)_
+
+---
+
+# DNS
+
+![bg 70%](img/DNS_in_the_real_world.svg.png)
+
+<br><br><br><br><br><br><br>
+_(wikipedia.org/wiki/Domain_Name_System)_
+
+---
+
+# DNS
+
+![bg 80%](img/iterative_dns.png)
+
+<br><br><br><br><br><br><br>
+_(wikipedia.org/wiki/Domain_Name_System)_
+
+---
+
+# DNS: två typer av servrar
+
+* Authorative name server
+    *  Den som styr data för en eller flera specifika domäner
+* Recursive resolver
+    * Cachead data för uppslagning
+    * Skickar frågan vidare vid behov
+
+---
+
+# Verktyg för uppslagning
+
+`dig <name> <type>`
+    e g `dig www.theverge.com`
+    e g  `dig theverge.com MX`
+
+`nslookup <name>`
+    e g `nslookup theverge.com`
+
+---
+
+<style scoped>
+    td, th {
+        font-size: 22pt;
+    }
+</style>
+
+# DNS record types
+
+|typ   |beskrivning|
+|------|-----------|
+|A     |Mappa namn mot ipv4-adress|
+|AAAA  |Samma, fast ipv6|
+|CNAME |Alias från ett namn till ett annat namn|
+|MX    |Peka ut mailserver för (sub)domänen|
+|NS    |Peka ut namnserver för domänen|
+|TXT   |Arbiträrt textfält; används ofta för app-specifik data, verifieringar, etc|
+|PTR   |Mappa IP-adress mot namn (motsats till A)
+
+---
+
+# DNS records
+
+```
+<name>              <ttl>   IN      <type>  <data>
+
+t ex...
+
+nackademin.se.      3600    IN      A       217.198.66.51
+```
+
+---
+
+# DNS records, exempel
+
+```
+> dig www.dnsimple.com
+;; ANSWER SECTION:
+www.dnsimple.com. 3600 IN CNAME dnsimple.com.
+dnsimple.com. 60 IN A 104.245.210.170
+
+> dig dnsimple.com mx
+;; ANSWER SECTION:
+dnsimple.com. 3600 IN MX 5 alt2.aspmx.l.google.com.
+dnsimple.com. 3600 IN MX 5 alt1.aspmx.l.google.com.
+dnsimple.com. 3600 IN MX 10 alt3.aspmx.l.google.com.
+dnsimple.com. 3600 IN MX 10 alt4.aspmx.l.google.com.
+dnsimple.com. 3600 IN MX 1 aspmx.l.google.com.
+```
+
+---
+
+# DNS records, exempel
+
+```
+> dig www.dnsimple.com ns
+;; ANSWER SECTION:
+dnsimple.com. 3600 IN NS ns4.dnsimple.com.
+dnsimple.com. 3600 IN NS ns1.dnsimple.com.
+dnsimple.com. 3600 IN NS ns3.dnsimple.com.
+dnsimple.com. 3600 IN NS ns2.dnsimple.com.
+
+> dig dnsimple.com txt
+;; ANSWER SECTION:
+dnsimple.com. 3600 IN TXT "MS=ms34502024"
+dnsimple.com. 60 IN TXT "google-site-
+verification=1LkF3IUYGELUtiSYhEtHI_UgDcpoKOvkD4LNrxSw7p0"
+```
+
+---
+
+# Övning 6
+
+Vad kan ni utläsa av följande DNS records?
+
+```
+foobar.se.      3600  IN  A       5.150.254.28
+mail.foobar.se. 3595  IN  A       5.150.254.28
+www.foobar.se.  2842  IN  CNAME   foobar.se.
+foobar.se.      3600  IN  MX   10 foobar-se.mx1.staysecuregroup.com.
+foobar.se.      3600  IN  MX   20 foobar-se.mx2.staysecuregroup.net.
+```
+
+---
+
+# Övning 6
+
+* Namnen `foobar.se`, `www.foobar.se` och `mail.foobar.se` pekar alla på samma server: `5.150.254.28`.
+* Mail till `foobar.se` hanteras i första hand av `foobar-se.mx1.staysecuregroup.com` och i andra hand av `foobar-se.mx2.staysecuregroup.net`.
+
+---
+
+# Konfigurera DNS
+
+* `/etc/hosts` -- det som användes innan DNS fanns! nu, manuella namn-till-ip-mappningar.
+* `/etc/resolv.conf`: peka ut namn-server för systemet. brukade vara massa meck med att filen skrevs över av dhcp, etc... sköts nuförtiden av systemd
+* `/etc/host.conf`: i vilken ordning ska olika host name resolvers användas? hosts, bind, etc
+
+--- 
+
+<style scoped>
+    blockquote {
+        font-size: 20pt;
+    }
+</style>
+
+# Konfigurera DNS: bind
+
+> BIND (/ˈbaɪnd/, or named (pronounced name-dee: /ˈneɪmdiː/, short for name daemon), is an implementation of the Domain Name System (DNS) of the Internet. It performs both of the main DNS server roles, acting as an authoritative name server for domains, and acting as a recursive resolver in the network.
+
+* `apt install bind9 bind9utils bind9-doc`
+* `named` är binds daemon
+* `/etc/bind` -- bind9-inställningar, konfigurera din bind0-server
+    * `./named.conf.options` för att konfigurera beteende
+    * `/named.conf.local` för att lägga in dina enga zoner t ex
+
+---
+
+# Konfigurera DNS: zoner
+
+> A DNS zone is any distinct, contiguous portion of the domain name space in the Domain Name System (DNS) for which administrative responsibility has been delegated to a single manager.
+
+---
+
+# Konfigurera DNS: egen bind-server!
+
+![bg 50%](img/dns-yt.png)
+
+<br><br><br><br><br><br><br>
+https://www.youtube.com/watch?v=EDBvowAOT4s
+
+---
+
+<style scoped>
+    li {
+        font-size: 22pt;
+    }
+</style>
+
+# Övning 7
+
+Få din Linux-maskin att (tillfälligt) anse att den är name server för domänen exempel.se. Fortsätt skicka alla andra förfrågningar till den name server du använder just nu.
+
+* Lägg minst in ett A record och ett CNAME record
+* Tänk på att backa upp relevanta filer innan du labbar, så att du enkelt kan gå tillbaka sedan
+* Ett omfattande exempel (som även får tjäna som demolösning) finns här: https://www.digitalocean.com/community/tutorials/how-to-configure-bind-as-a-private-network-dns-server-on-ubuntu-18-04
+
+---
+
+# Övning 7
+
+* Kommentar -- hur långt kom ni?
+* Någon som vill visa en egen demo?
+
+---
+
+Tillbakablick, reflektion, kommentarer...
