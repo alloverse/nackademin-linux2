@@ -320,7 +320,7 @@ password'`
 
 # Hur du bäst kör din egen mail-server
 
-* inte.
+* inte (om du kan undvika det).
     * du kommer få otroliga mängder spam
     * din smtp-server kommer inte vara vitlistad hos världen så din mail kommer inte komma fram
     * du kommer bli hackad
