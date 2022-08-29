@@ -127,7 +127,7 @@ ip link set eth1 up
 
 `$ sudo ifconfig eth0 10.1.1.101 netmask 255.255.255.0`
 
-![](/img/ifconfig.png)
+![](img/ifconfig.png)
 
 ---
 
@@ -543,6 +543,18 @@ Få din Linux-maskin att (tillfälligt) anse att den är name server för domän
 
 * Kommentar -- hur långt kom ni?
 * Någon som vill visa en egen demo?
+
+---
+
+# DNS misc
+
+* Round robin -- flera A-records för samma domän
+* Seriös setup: använd en gömd main-server, och sedan flera publika servrar som använder den gömda main som authority
+
+Sätt "min" dator som din DNS:
+* `sudo pico /etc/systemd/resolved.conf`
+* `DNS=10.6.69.100`
+* `sudo systemctl restart systemd-resolved`
 
 ---
 
