@@ -145,17 +145,19 @@ Skapa databas:
 
 Skapa användare:
 
-```
+```sql
 CREATE USER [IF NOT EXISTS] user [auth_option] [, user [auth_option]] ...
     DEFAULT ROLE role [, role ] ...
-    [REQUIRE {NONE | tls_option [[AND] tls_option] ...}] [WITH resource_option [resource_option] ...] [password_option | lock_option] ...
+    [REQUIRE {NONE | tls_option [[AND] tls_option] ...}]
+    [WITH resource_option [resource_option] ...]
+    [password_option | lock_option] ...
 ```
 
 ---
 
 # MySQL: databaser och användare
 
-```
+```sql
 GRANT priv_type [(column_list)] [, priv_type [(column_list)]] ...
     ON [object_type] priv_level
     TO user [auth_option] [, user [auth_option]] ...
@@ -167,7 +169,7 @@ GRANT priv_type [(column_list)] [, priv_type [(column_list)]] ...
 
 # MySQL: Exempel
 
-```
+```sql
 mysql> create database mydb;
    mysql> CREATE USER myuser1 IDENTIFIED BY "ohemlig";
    mysql> GRANT ALL PRIVILEGES ON mydb.* TO 'myuser1';
@@ -176,17 +178,23 @@ mysql> create database mydb;
 
 ---
 
+<style scoped>
+    li { font-size: 20pt; }
+</style>
+
 # Övning 2
 
-* Skapa en databas testdb1 på din MySQL- server.
-* Skapa en användare dbuser1 som får fullständiga rättigheter i databasen testdb1 och även får skapa nya användare där.
-* Låt dbuser1 skapa några testtabeller, använd förslagsvis tidigare bild som din databasdesign.
+* Skapa en databas `testdb1` på din MySQL-server.
+* Skapa en användare `dbuser1` som får fullständiga rättigheter i databasen `testdb1` och även får skapa nya användare där.
+* Låt `dbuser1` skapa några testtabeller, använd förslagsvis tidigare bild som din databasdesign.
+
+![](img/schema.png)
 
 ---
 
 # Övning 2
 
-```
+```sql
 mysql> create database testdb1;
 mysql> create user dbuser1 identified by "losen1";
 mysql> grant all privileges on testdb1.* to 'dbuser1';
@@ -196,13 +204,36 @@ $ mysql -u dbuser1 -p
 
 ---
 
+<style scoped>
+    code { font-size: 10pt; }
+</style>
+
 # Övning 2
 
-```
-mysql> create table users (id int auto_increment primary key, first_name varchar(60), last_name varchar(80), email varchar(50));
-mysql> create table movies (id int auto_increment primary key, name varchar(60), description text);
-mysql> create table ratings (id int auto_increment primary key, rating int, user_id int, movie_id int, foreign key (user_id) references users(id), foreign key (movie_id) references movies(id));
-mysql> create table tags (id int auto_increment primary key, tag varchar(40), user_id int, movie_id int, foreign key (user_id) references users(id), foreign key (movie_id) references movies(id));
+```sql
+mysql> create table users (
+    id int auto_increment primary key,
+    first_name varchar(60),
+    last_name varchar(80),
+    email varchar(50));
+mysql> create table movies
+    (id int auto_increment primary key,
+    name varchar(60),
+    description text);
+mysql> create table ratings
+    (id int auto_increment primary key,
+    rating int,
+    user_id int,
+    movie_id int,
+    foreign key (user_id) references users(id), 
+    foreign key (movie_id) references movies(id));
+mysql> create table tags
+    (id int auto_increment primary key,
+    tag varchar(40),
+    user_id int,
+    movie_id int,
+    foreign key (user_id) references users(id),
+    foreign key (movie_id) references movies(id));
 ```
 
 ---
@@ -217,7 +248,7 @@ mysql> create table tags (id int auto_increment primary key, tag varchar(40), us
 
 ---
 
-// bild på rättigheter
+![bg 90%](img/devprivs.png)
 
 ---
 
@@ -228,7 +259,7 @@ mysql> create table tags (id int auto_increment primary key, tag varchar(40), us
 
 ---
 
-```
+```sql
 mysql> create user dbuser2 identified by "losen2";
 mysql> create user dbuser3 identified by "losen3";
 mysql> grant select, insert, update on testdb1.* to 'dbuser2';
@@ -247,16 +278,40 @@ mysql> grant select on testdb1.* to 'dbuser3';
 
 # Koppla från app: Java-exempel
 
+```java
+Class.forName("com.mysql.jdbc.Driver").newInstance();
+String connectionUrl = "jdbc:mysql://localhost:3306/testdatabase";
+conn = DriverManager.getConnection(connectionUrl, "testuser", "testpass");
+
+String sqlStmt = "SELECT * FROM employees WHERE last_name=? AND first_name LIKE ?";
+
+prepStmt = conn.prepareStatement(sqlStmt);
+prepStmt.setString(1, "Doe");
+prepStmt.setString(2, "%n%");
+
+rs = prepStmt.executeQuery();
+while (rs.next()) {
+    String id = rs.getString("id");
+    String firstName = rs.getString("first_name");
+    String lastName = rs.getString("last_name");
+    System.out.println("ID: " + id + ", First Name: " + firstName + ", Last Name: " + lastName);
+}
+```
+
 ---
 
-# SQL injection: exempel
+# SQL injection: exempel (PHP)
 
-```
-    $title = $_GET["title"];
-    mysqli_exec($m, "select * from books where title='".$title."';");
+```php
+$title = $_GET["title"];
+mysqli_exec($m, "select * from books where title='".$title."';");
 ```
 
-Och sen anropar någon sidan med en title: `'; drop table users;--` och sen har du en riktigt dålig dag.
+Och sen anropar någon sidan med en title = `'; drop table users;--` 
+
+(exempel i form av URL:
+`https://example.com/books.php?title=%27%3B+drop+table+users%3B--`)
+ och sen har du en riktigt dålig dag.
 
 ---
 
@@ -279,9 +334,10 @@ Och sen anropar någon sidan med en title: `'; drop table users;--` och sen har 
 
 # Övning 4
 
-`mysqldump -u dbuser1 -p --databases testdb1 >testdb1.sql`
+```bash
+$ mysqldump -u dbuser1 -p --databases testdb1 > testdb1.sql
+```
 
-// picture here
 
 ---
 
@@ -295,9 +351,15 @@ Och sen anropar någon sidan med en title: `'; drop table users;--` och sen har 
 
 # Övning 5
 
-```
+```sql
 mysql> create database webshop; mysql> use webshop;
-mysql> create table articles (id int auto_increment primary key, name varchar(40), long_name varchar(160), description text, price decimal, category int);
+mysql> create table articles (
+    id int auto_increment primary key,
+    name varchar(40),
+    long_name varchar(160),
+    description text,
+    price decimal,
+    category int);
 mysql> create user webuser identified by "Aveivdef#1";
 mysql> grant select on webshop.* to 'webuser';
 mysql> create user admuser identified by "Mealof1bos&p";
