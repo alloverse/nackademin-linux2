@@ -352,7 +352,8 @@ $ mysqldump -u dbuser1 -p --databases testdb1 > testdb1.sql
 # Övning 5
 
 ```sql
-mysql> create database webshop; mysql> use webshop;
+mysql> create database webshop;
+mysql> use webshop;
 mysql> create table articles (
     id int auto_increment primary key,
     name varchar(40),
@@ -374,11 +375,277 @@ mysql> grant select, insert, update, delete on webshop.* to 'admuser';
 
 ---
 
+# NoSQL-databaser
+
+* Inte relationella databaser
+* Finns flera olika typer, t ex:
+    * Document store
+    * Key-value store
+    * Graph
+
+---
+
+# NoSQL: Key-Value
+
+> A key–value database, or key–value store, is a data storage paradigm designed for storing, retrieving, and managing associative arrays, and a data structure more commonly known today as a dictionary or hash table.
+
+* Nyckel till dataset, sökningar endast på nyckeln
+* Vanligt med data i RAM för snabbhetens skull
+* Exempel: dbm, Apache Ignite, **MemcacheDB**, **Redis**
+
+---
+
+# NoSQL: Document store
+
+> A document-oriented database, or document store, is a computer program designed for storing, retrieving and managing document-oriented information, also known as semi-structured data.
+
+* Ett specialfall av key – value
+* Dokument i JSON, BSON, XML...
+* Kan göra sökningar utifrån dokumentens struktur
+* Exempel: MongoDB, CouchDB, DocumentDB
+
+---
+
+# NoSQL: Graph
+
+> In computing, a graph database (GDB) is a database that uses graph structures for semantic queries with nodes, edges, and properties to represent and store data. A key concept of the system is the graph (or edge or relationship).
+
+* Noder och länkar (”edges”) mellan dessa
+* Sociala grafer, intressegrafer m fl
+* Exempel: Neo4j, TerminusDB, RedisGraph
+
+---
+
 <!-- _class: - invert - lead -->
 
 # <!--fit--> MongoDB
 
 ---
+
+# MongoDB
+
+* Dokumentdatabas
+* Collections uppbyggda i json
+* Inga joins etc!
+* Open source
+
+---
+
+# MongoDB i praktiken
+
+* `mongod`
+* Data lagras per default i `/var/lib/mongodb`
+* `/etc/mongodb.conf`
+    * Här finns bl a `dbpath` angivet
+* Defaultport `27017`, lokalt webbinterface på `28017`
+* Loggar per default till `/var/log/mongodb/mongodb.log`
+
+---
+
+# Övning 6
+
+* Installera MongoDB (det finns paket för apt) och starta den
+    * Paketet heter `mongodb`
+* Kontrollera att du kan gå in i kommandorads-interfacet)
+
+---
+
+```bash
+$ mongo
+MongoDB shell version v3.6.8
+connecting to: mongodb://127.0.0.1:27017
+Implicit session: session { "id" : UUID("bf6b3569-e043-4a0b-8cdb-c48e78373fda") }
+MongoDB server version: 3.6.8
+Welcome to the MongoDB shell.
+For interactive help, type "help".
+For more comprehensive documentation, see
+	http://docs.mongodb.org/
+Questions? Try the support group
+	http://groups.google.com/group/mongodb-user
+> 
+
+```
+
+---
+
+# MongoDB
+
+* En **databas** skapas så snart man börjar använda den
+    `use mydb`
+* Skapa **collection** (motsvarar ”tabell” i RDB-- samling av liknande saker)
+    `db.createCollection("<name_of_collection>")`
+* En collection skapas också så snart man börjar lägga in data
+* **Records** (dvs dokument, motsvarar "rader" i RDB) i en collection
+* Notera att du inte definerar schema eller vilka fält som är giltiga. Bara att lägga till vad som helst som är giltig JSON.
+
+---
+
+# MongoDB
+
+* Sök data med find
+    `db.<collection>.find()`
+    `db.<collection>.find( { <villkor> })`
+* Stoppa in data med insert
+    `db.<collection>.insert( { <data> } )`
+
+---
+
+# MongoDB exempel
+
+```js
+> use testdb
+> db.mycollection.insert({
+    "first_name": "Archibald",
+    "last_name": "Haddock",
+    "email": "haddock@moulinsart.be"
+})
+> db.newCol.find()
+> db.newCol.find({ "first_name": "Tintin" })
+```
+
+---
+
+# Övning 7
+
+* Skapa en databas testdb i MongoDB.
+* Skapa en collection för users med first_name, last_name, email i denna databas och lägg in lite data.
+
+---
+
+# Övning 7
+
+```js
+> use testdb
+> db.users.insert({
+    first_name: "Tintin",
+    last_name: "Tintin",
+    email: "tintin@moulinsart.be"
+})
+> db.users.insert({
+    first_name: "Milou",
+    last_name: "Hund",
+    email: "milou@moulinsart.be"
+});
+```
+
+---
+
+<style scoped>
+    code { font-size: 14pt; }
+    li { font-size: 18pt; }
+</style>
+
+# Användare i MongoDB
+
+* Skapa användare
+    ```js
+    db.createUser({ user: "<username>", pwd: "<pwd>" })
+    ```
+* Sätta rättigheter
+    *  När användaren skapas:
+    ```js
+    db.createUser({
+        user: "<username>",
+        pwd: "<pwd>",
+        roles: [ { role: "<role>", db: "<dbname>" } ] 
+    })
+    ```
+* Med grantRolesToUser
+    ```js
+    db.grantRolesToUser( "<username>", [ <roles> ] )
+    ````
+
+---
+
+# Användare i MongoDB, exempel
+
+```js
+> db.createUser({
+    user: "testuser1",
+    pwd: "losen1",
+    roles: [{
+        role: "readWrite",
+        db:"testdb"
+    }]
+})
+> db.createUser({
+    user: "testuser2",
+    pwd: "losen1",
+    roles: ["readWrite", "dbAdmin", "userAdmin"]
+})
+```
+
+---
+
+# Övning 8
+
+* Lägg till en användare `muser1` som har **fullständiga** rättigheter i din databas, och en användare `muser2` som endast har **läsrättigheter**.
+* Testa att lägga in data respektive söka data, så att du ser att rättigheterna stämmer.
+
+---
+
+# Övning 8
+
+```
+> db.createUser( { user: "muser1", pwd: "losen1", roles: [ "readWrite", "dbAdmin", "userAdmin" ] } )
+> db.createUser( { user: "muser2", pwd: "losen2", roles: [ "read" ] } )
+```
+
+---
+
+# MongoDB: backup/dump av data
+
+* Ta ut data till en binär fil (t ex för backup eller för att kopiera en databas till en ny server): `mongodump`
+* Skriver per default ut allt till ett directory dump med underdirectories för respektive databas
+* Läs in med `mongorestore`
+    `mongorestore <directory>`
+* Alternativ  metod som ger dig json, plus mer finkorniga verktyg): `mongoexport` + `mongoimport`. Användbart för att vidareprocessa data, stoppa i annat verktyg, etc... **Använd inte till backup!**
+
+---
+
+# Övning 9
+
+* Gör en dump av din MongoDB-databas
+* Titta på de filer som sakapas
+
+---
+
+# Övning 9
+
+```bash
+$ mongodump
+
+$ mongoexport
+```
+
+---
+
+# MySQL vs MongoDB
+
+* Skillnader i hur man tänker kring databasdesign
+    * MySQL (relationsdatabas) i tabeller enligt hur datat förhåller sig till vartannat.
+    * MongoDB (dokumentdatabas) i collections där man kan ha nästlat data – men inte slå ihop sökningar av flera collections på en gång. (Men blir ändå relationer -- eg "vilken användare äger denna filen")
+* Likheter i mycket kring drift av databaser
+
+---
+
+# Övning 10
+
+* Antag att ni jobbar med både MySQL- och MongoDB-databaser. Ni skall nu göra en checklista för vad man vill ha koll på i drift för dessa.
+* Lista saker som skall hanteras för båda typerna
+* Lista olikheter i hantering
+
+---
+
+# Övning 10
+
+* Uppsättningar för att se till att rätt saker körs på servern – och att inte onödiga program ligger där.
+* Öppna för rätt portar (`3306` för MySQL, `27017` för MongoDB (`28017` för admin-interface))
+* Håll koll på loggar (olika loggar, men samma princip)
+* Håll koll på när data växer (olika ställen, men samma princip)
+* Backupbehov
+* Användare i databaser
+* Användare på servern
 
 ---
 
@@ -388,3 +655,7 @@ mysql> grant select, insert, update, delete on webshop.* to 'admuser';
 * Väldigt mycket null-checkar
 * Ingen statisk typning till hjälp i statiska språk
 * Hade hellre använt postgres från början
+
+---
+
+Tillbakablick, reflektion, kommentarer...
