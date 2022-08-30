@@ -111,6 +111,51 @@ footer: Nackademin HT 2022 • Linux 2 DEVOPS21 • Alloverse AB
 
 ---
 
+# MySQL i praktiken
+
+* `mysqld`
+* Data lagras per default i `/var/lib/mysql`
+* `/etc/mysql/my.cnf`
+    * datadir, etc...
+* Defaultport 3306
+* Loggar per default till `/var/log/mysql/error.log`
+
+---
+
+# Övning 1
+
+* Installera MySQL (finns i apt) och starta den
+    * Paketet heter `mysql-server`
+* Kontrollera att du kan gå in i kommandorads-interfacet
+* Ta en titt i `/etc/mysql`, speciellt `my.cnf`
+
+---
+
+# Övning 1
+
+// lägg in screenshot
+
+---
+
+# MySQL: Databaser och användare
+
+Skapa databas:
+
+`CREATE {DATABASE | SCHEMA} [IF NOT EXISTS] db_name [create_option`
+
+Skapa användare:
+
+```
+CREATE USER [IF NOT EXISTS] user [auth_option] [, user [auth_option]] ...
+    DEFAULT ROLE role [, role ] ...
+    [REQUIRE {NONE | tls_option [[AND] tls_option] ...}] [WITH resource_option [resource_option] ...] [password_option | lock_option] ...
+
+---
+
+# MySQL: databaser och användare
+
+* 
+
 <!-- _class: - invert - lead -->
 
 # <!--fit--> NoSQL
