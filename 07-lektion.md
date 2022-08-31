@@ -176,6 +176,91 @@ $ open http://localhost/mysqlconnect.php
 
 ---
 
+# Automatisera installation
+
+* Skript som genomför alla steg i installationen
+* Installationsskriptet använder i sin tur sql-skript,php-skript och vad annat det kan behöva
+* Målet är att kunna ge ett kommando på kommandorad och veta att installationen görs precis med de steg man har testat ut, i rätt ordning
+
+---
+
+# Övning 3
+
+Gör nu ett script som automatiserar installation av LAMP enligt vad vi gjorde i förra övningen.
+
+---
+
+# Övning 3: Lösning 1/2
+
+```bash
+$ mkdir lamp-installer; cd lamp-installer
+$ cat > InstallLAMP.sh
+#!/bin/bash
+apt-get update
+apt-get install apache2
+apt-get install mysql-server
+apt-get install php libapache2-mod-php php-mysql
+systemctl restart apache2
+mysql <testdb1.sql
+cp mysqlconnect.php /var/www/html/
+^D
+$
+```
+
+---
+
+# Övning 3: Lösning 2/2
+
+```sql
+$ cat > testdb1.sql
+create database if not exists testdb1;
+create user dbuser1 identified by "losen1";
+grant all privileges on testdb1.* to 'dbuser1';
+use testdb1;
+create table if not exists users (id int auto_increment
+primary key, first_name varchar(60), last_name varchar(80),
+email varchar(50));
+insert into users (first_name, last_name, email) values
+('Archibald', 'Haddock', 'haddock@moulinsart.be');
+insert into users (first_name, last_name, email) values
+('Karl', 'Kalkyl', 'tournesol@moulinsart.be');
+```
+
+---
+
+# LAMP: Avslutningsvis
+
+* Etablerad uppsättning som används på många håll
+* LAMP-stacken får konkurrens av t ex JS-baserade MEAN: **MongoDB**, **ExpressJS**, **AngularJS**, och **NodeJS**.
+* Som vanligt får man fundera på vad servern skall vara till för.
+
+---
+
+# Övning 4
+
+Tänk er att ni har en LAMP-server för en webbsite där man kan söka fram uppgifter om beslut på en förenings årsmöten genom åren, samt tillhörande databas.
+
+**Gör en riskanalys för driften av denna server.**
+* Vad kan hända?
+* Hur troligt respektive hur allvarligt är det?
+* Åtgärder för de risker som får ett för högt riskvärde
+
+---
+
+<style scoped>
+    td, th { font-size: 23pt; }
+</style>
+
+|Risk|Sannolikhet|Konsekvens|Riskvärde|Åtgärder
+|---|------------|----------|---------|--------
+|Förlust av data i db|3|4|12|Backup
+|Nätverksproblem (temp)|4|2|8|-
+|Server går sönder|2|5|10|Redo att installera ny, alt failover
+|Programvara åldras|5|3|15|Se till att uppdatera
+|Förlorar LAMP-kompetens|1|5|5|-
+
+---
+
 <!-- _class: - invert - lead -->
 # <!--fit--> Backup
 
