@@ -508,17 +508,34 @@ Questions? Try the support group
 
 ---
 
+<style scoped>
+    code { font-size: 13pt; }
+</style>
+
 # MongoDB exempel
 
 ```js
 > use testdb
+switched to db testdb
 > db.mycollection.insert({
     "first_name": "Archibald",
     "last_name": "Haddock",
     "email": "haddock@moulinsart.be"
 })
-> db.newCol.find()
-> db.newCol.find({ "first_name": "Tintin" })
+{
+  insertedIds: { '0': ObjectId("630f4668ac752c770b3674bf") }
+}
+> db.mycollection.find()
+[
+  {
+    _id: ObjectId("630f4668ac752c770b3674bf"),
+    first_name: 'Archibald',
+    last_name: 'Haddock',
+    email: 'haddock@moulinsart.be'
+  }
+]
+
+> db.mycollection.find({ "first_name": "Tintin" })
 ```
 
 ---
@@ -555,12 +572,7 @@ Questions? Try the support group
 
 # Användare i MongoDB
 
-* Skapa användare
-    ```js
-    db.createUser({ user: "<username>", pwd: "<pwd>" })
-    ```
-* Sätta rättigheter
-    *  När användaren skapas:
+* Skapa användare (notera: måste ange roller)
     ```js
     db.createUser({
         user: "<username>",
@@ -568,7 +580,7 @@ Questions? Try the support group
         roles: [ { role: "<role>", db: "<dbname>" } ] 
     })
     ```
-* Med grantRolesToUser
+* Ändra på roller i efterhand med grantRolesToUser
     ```js
     db.grantRolesToUser( "<username>", [ <roles> ] )
     ````
@@ -624,7 +636,7 @@ Questions? Try the support group
 # Övning 9
 
 * Gör en dump av din MongoDB-databas
-* Titta på de filer som sakapas
+* Titta på de filer som skapas
 
 ---
 
@@ -632,8 +644,15 @@ Questions? Try the support group
 
 ```bash
 $ mongodump
+2022-08-31T13:57:31.002+0200	writing admin.system.version to dump/admin/system.version.bson
+2022-08-31T13:57:31.005+0200	done dumping admin.system.version (1 document)
+2022-08-31T13:57:31.007+0200	writing testdb.mycollection to dump/testdb/mycollection.bson
+2022-08-31T13:57:31.008+0200	done dumping testdb.mycollection (1 document)
 
-$ mongoexport
+$ mongoexport --db=testdb --collection=mycollection > mycollection.json
+2022-08-31T13:57:10.734+0200	connected to: mongodb://localhost/
+2022-08-31T13:57:10.750+0200	exported 1 record
+
 ```
 
 ---
