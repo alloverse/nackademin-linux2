@@ -266,9 +266,99 @@ Tänk er att ni har en LAMP-server för en webbsite där man kan söka fram uppg
 
 ---
 
+# Backup: principer (1/2)
+
+* Vad behöver backas upp på vilken server?
+* Hur / var lagras backuper?
+* Vad är relevant att ha på plats för snabb (om-)installation?
+
+---
+
+# Backup: principer (2/2)
+
+* Det relevanta är återställning. Testa återställning regelbundet.
+* 3-2-1-principen
+    * 3 exemplar (live + 2 backuper)
+    * 2 olika media
+    * 1 backup ”offsite”
+* Automatisera!! Manuell backup är inte värt en tiondel av en automatisk backup.
+    * Finns även en mängd verktyg för att automatisera backuper
+
+---
+
+# Backup: policy
+
+* Vad som skall backas upp och hur ofta
+* Var backuper finns
+* Vem som har tillgång till backuper
+* Ansvar för återställning
+* Kryptering av backuper för dataskydd
+
+---
+
+# Övning 5
+
+* Om vi nu tänker på vår LAMP-server, vad är relevant att ta backup på där?
+
+---
+
+# Övning 5: Lösning
+
+* Data från databasen
+    * Backup av /var/lib/mysql
+    * mysqldump vid särskilt viktiga snapshot-tillfällen eller regelbunden mysqldump (tänk cronjob) och även backup av dessa filer
+* Kanske även PHP-program på servern
+    * Backup av /var/www/html
+    * Eller: håll koll på vilken git-revision?
+
+---
+
+# Övning 6
+
+Implementera nu backup av er MySQL-databas i form av regelbunden dump av data till något lämpligt ställe på disk (låtsas för sakens skull att det är en ansluten extern disk som kommer finnas kvar om databasen kraschar).
+
+Implementera också att mer än 7 dagar gamla dumpar rensas bort automatiskt en gång per dygn. (Tips: `find`)
+
+---
+
+# Övning 6
+
+```bash
+$ crontab -e
+
+30 3 * * * mysqldump --databases testdb1 >/opt/backup/testdb1[`date +%D`].sql
+00 5 * * * find /opt/backup -mtime +7 -exec rm {} \;
+
+```
+
+---
+
 <!-- _class: - invert - lead -->
 # <!--fit--> Images
 # Med `packer`
+
+---
+
+# Image-verktyg
+
+* Bygga en image med hela servermiljön inkluderad
+* Gör det enkelt att snabbt återskapa eller duplicera en miljö
+* Exempel: Packer, Vagrant
+
+---
+
+# Packer
+
+> Packer is an open source tool for creating identical machine images for multiple platforms from a single source configuration. Packer is lightweight, runs on every major operating system, and is highly performant, creating machine images for multiple platforms in parallel
+
+---
+
+# Packer
+
+* Gör en image av den maskin den är installerad på
+* Konfigureras med det som skall komma med i denna image
+* Kan bl a skapa AMI för EC2 (AWS), OVF för VirtualBox, VMX för VMWare
+* Används för snabb uppbyggnad av infrastruktur för ett system
 
 ---
 
