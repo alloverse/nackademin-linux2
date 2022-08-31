@@ -127,13 +127,27 @@ footer: Nackademin HT 2022 • Linux 2 DEVOPS21 • Alloverse AB
 * Installera MySQL (finns i apt) och starta den
     * Paketet heter `mysql-server`
 * Kontrollera att du kan gå in i kommandorads-interfacet
+    * `sudo mysql` krävs då det inte finns någon användare med lösenord än.
 * Ta en titt i `/etc/mysql`, speciellt `my.cnf`
 
 ---
 
 # Övning 1
 
-// lägg in screenshot
+```bash
+$ sudo apt install mysql-server
+...
+$ sudo mysql
+nevyn@nevyn-linux2:~/Dev/nackademin-linux2$ sudo mysql
+[sudo] password for nevyn: 
+Welcome to the MySQL monitor.  Commands end with ; or \g.
+Server version: 8.0.30-0ubuntu0.22.04.1 (Ubuntu)
+
+Type 'help;' or '\h' for help. Type '\c' to clear the current input statement.
+
+mysql> create user nevyn identified by "pass123";
+Query OK, 0 rows affected (0,04 sec)
+```
 
 ---
 
@@ -141,7 +155,9 @@ footer: Nackademin HT 2022 • Linux 2 DEVOPS21 • Alloverse AB
 
 Skapa databas:
 
-`CREATE {DATABASE | SCHEMA} [IF NOT EXISTS] db_name [create_option`
+```sql
+CREATE {DATABASE | SCHEMA} [IF NOT EXISTS] db_name [create_option]
+```
 
 Skapa användare:
 
@@ -170,10 +186,10 @@ GRANT priv_type [(column_list)] [, priv_type [(column_list)]] ...
 # MySQL: Exempel
 
 ```sql
-mysql> create database mydb;
-   mysql> CREATE USER myuser1 IDENTIFIED BY "ohemlig";
-   mysql> GRANT ALL PRIVILEGES ON mydb.* TO 'myuser1';
-   mysql> GRANT SELECT ON mydb.* TO 'myuser2';
+mysql> CREATE DATABASE mydb;
+mysql> CREATE USER myuser1 IDENTIFIED BY "ohemlig";
+mysql> GRANT ALL PRIVILEGES ON mydb.* TO 'myuser1';
+mysql> GRANT SELECT ON mydb.* TO 'myuser2';
 ```
 
 ---
@@ -186,7 +202,7 @@ mysql> create database mydb;
 
 * Skapa en databas `testdb1` på din MySQL-server.
 * Skapa en användare `dbuser1` som får fullständiga rättigheter i databasen `testdb1` och även får skapa nya användare där.
-* Låt `dbuser1` skapa några testtabeller, använd förslagsvis tidigare bild som din databasdesign.
+* Låt `dbuser1` skapa några testtabeller, använd förslagsvis tidigare bild som din databasdesign. Använd inte `root`/`sudo` i detta steg!
 
 ![](img/schema.png)
 
@@ -195,10 +211,11 @@ mysql> create database mydb;
 # Övning 2
 
 ```sql
-mysql> create database testdb1;
-mysql> create user dbuser1 identified by "losen1";
-mysql> grant all privileges on testdb1.* to 'dbuser1';
-mysql> grant create user on *.* to 'dbuser1';
+mysql> CREATE DATABASE testdb1;
+mysql> CREATE USER dbuser1 IDENTIFIED BY "losen1";
+mysql> GRANT ALL PRIVILEGES ON testdb1.* TO 'dbuser1';
+mysql> GRANT CREATE USER ON *.* TO 'dbuser1';
+mysql> exit
 $ mysql -u dbuser1 -p
 ```
 
@@ -211,23 +228,24 @@ $ mysql -u dbuser1 -p
 # Övning 2
 
 ```sql
-mysql> create table users (
+mysql> USE testdb1;
+mysql> CREATE TABLE users (
     id int auto_increment primary key,
     first_name varchar(60),
     last_name varchar(80),
     email varchar(50));
-mysql> create table movies
+mysql> CREATE TABLE movies
     (id int auto_increment primary key,
     name varchar(60),
     description text);
-mysql> create table ratings
+mysql> CREATE TABLE ratings
     (id int auto_increment primary key,
     rating int,
     user_id int,
     movie_id int,
     foreign key (user_id) references users(id), 
     foreign key (movie_id) references movies(id));
-mysql> create table tags
+mysql> CREATE TABLE tags
     (id int auto_increment primary key,
     tag varchar(40),
     user_id int,
