@@ -126,16 +126,17 @@ På detta en databas i MySQL och program i PHP.
 ```php
 <pre>
 <?php
-$conn = new mysqli("localhost", "testdb1", "dbuser1", "losen1");
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+$conn = new mysqli("localhost", "dbuser1", "losen1", "testdb1");
 
+if ($conn->connect_error) {
+	die("Connection failed: " . $conn->connect_error);
+}
 $sql = "select * from users";
 $result = $conn->query($sql);
 while($row = $result->fetch_assoc()) {
-    print_r($row):
+	print_r($row);
 }
+?>
 </pre>
 ```
 
@@ -152,20 +153,22 @@ while($row = $result->fetch_assoc()) {
 
 ---
 
-# Övning 2
-
 ```sql
 $ sudo mysql -uroot
 mysql> create database testdb1;
-mysql> create user dbuser1 identified by "losen1";
-mysql> grant all privileges on testdb1.* to 'dbuser1';
+mysql> create user dbuser1@"localhost" identified by "losen1";
+mysql> grant all privileges on testdb1.* to dbuser1@'localhost';
+mysql> exit
 $ mysql -udbuser1 -p
+mysql> use testdb1;
 mysql> create table users (id int auto_increment primary key,
 first_name varchar(60), last_name varchar(80), email varchar(50));
 mysql> insert into users (first_name, last_name, email) values
 ('Archibald', 'Haddock', 'haddock@moulinsart.be');
+mysql> exit
 $ php ./mysqlconnect.php
 ...
+$ sudo cp mysqlconnect.php /var/www/html/
 $ open http://localhost/mysqlconnect.php
 ```
 
@@ -326,7 +329,7 @@ Implementera också att mer än 7 dagar gamla dumpar rensas bort automatiskt en 
 ```bash
 $ crontab -e
 
-30 3 * * * mysqldump --databases testdb1 >/opt/backup/testdb1[`date +%D`].sql
+30 3 * * * mysqldump --databases testdb1 >/opt/backup/testdb1[`date +%Y%m%d`].sql
 00 5 * * * find /opt/backup -mtime +7 -exec rm {} \;
 
 ```
