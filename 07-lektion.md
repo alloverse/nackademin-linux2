@@ -67,9 +67,9 @@ footer: Nackademin HT 2022 • Linux 2 DEVOPS21 • Alloverse AB
 
 ---
 
-# Exempel: Typisk 3-lagersarkitektur
+# Exempel:  3-lagersarkitektur
 
-// todo: picture
+![ bg 40%](img/3layer.png)
 
 ---
 
@@ -108,7 +108,7 @@ På detta en databas i MySQL och program i PHP.
 
 # LAMP
 
-// todo: pic
+![](img/lamp.png)
 
 ---
 
