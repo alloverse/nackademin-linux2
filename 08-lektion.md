@@ -218,6 +218,28 @@ Antag nu att företaget i förra övningen bestämt att ni skall gå vidare och 
 # <!--fit--> VM i molnet
 
 ---
+# Virtuell server i molnet
+
+* Leverantör som tillhandahåller en stor och spridd serverpark bakom de virtuella servrarna.
+* Stora aktörer: AWS (Amazon), Azure (Microsoft), Google cloud (Google)
+
+--- 
+
+# Cloud (molntjänster)
+
+* Många servrar i nätver
+* Virtuella servrar kan i princip ligga var som helst i detta nät
+* Tjänster av olika slag, från en "egen" server till specifika funktioner
+
+---
+
+# Cloud (molntjänster)
+
+> Cloud computing is the on-demand availability of computer system resources, especially data storage (cloud storage) and computing power, without direct active management by the user. The term is generally used to describe data centers available to many users over the Internet.[1] Large clouds, predominant today, often have functions distributed over multiple locations from central servers.
+
+
+
+---
 
 <!-- _class: - invert - lead -->
 # <!--fit--> AWS & EC2
