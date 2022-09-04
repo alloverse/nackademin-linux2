@@ -16,9 +16,7 @@ footer: Nackademin HT 2022 • Linux 2 DEVOPS21 • Alloverse AB
 
 * Virtuella servrar (del 1/2)
 * Virtualisering och hypervisors
-* Skapa/administrera Linux-VM i molnet (EC2/AWS
-
-)
+* Skapa/administrera Linux-VM i molnet (EC2/AWS)
 
 ---
 
@@ -237,15 +235,101 @@ Antag nu att företaget i förra övningen bestämt att ni skall gå vidare och 
 
 > Cloud computing is the on-demand availability of computer system resources, especially data storage (cloud storage) and computing power, without direct active management by the user. The term is generally used to describe data centers available to many users over the Internet.[1] Large clouds, predominant today, often have functions distributed over multiple locations from central servers.
 
+---
 
+# Cloud (molntjänster)
+
+## Private cloud
+
+Egen serverpark utspridd till att utgöra moln för ett företag att lägga servrar och tjänster på.
+
+## Public cloud
+
+Moln tillgängligt för vem som helst som vill köpa tjänster, såsom hos de stora leverantörerna.
 
 ---
 
 <!-- _class: - invert - lead -->
 # <!--fit--> AWS & EC2
 
----*
+---
 
-<!-- _class: - invert - lead -->
-# <!--fit--> Virtuella system
+# AWS
 
+* Behövs ett konto hos AWS
+* Finns en uppsättning färdiga serveruppsättningar som man kan välja att köra
+* Notera behovet av att generera ett nyckelpar för inloggning
+* https://aws.amazon.com/
+
+
+---
+
+![bg fit](img/image-008.jpg)
+
+---
+
+![bg fit](img/image-009.png)
+
+---
+
+![bg fit](img/image-010.png)
+
+---
+
+![bg fit](img/image-011.png)
+
+---
+
+![bg fit](img/image-012.png)
+
+---
+
+# Server i AWS
+
+Koppla upp med ssh:
+
+`ssh -i <pem path> <user>@<dns name>`
+
+Exempel:
+
+`ssh -i MyEC2.pem ubuntu@ec2-13-49-175-190.eu-north-1.compute.amazonaws.com`
+
+---
+
+# Övning 4
+
+* Gör dig en Linux-server i AWS.
+    * Konto kräver diverse uppgifter, men en standard Linux-server kan köras gratis så länge den inte har mycket trafik.
+* Logga in med ssh
+* Ta en titt på vilka daemoner som är igång på din nygjorda server
+* Vad är installerat per default på din server?
+
+---
+
+# Övning 5
+
+* Gör nu din AWS-maskin till en LAMP-server.
+* Se till så att den kan nås från Internet.
+
+---
+
+
+![bg fit](img/image-013.png)
+
+---
+
+![bg fit](img/image-014.png)
+
+---
+ # Att tänka på vid val av moln
+
+* Region – var har de sina serverhaller, samt legala aspekter.
+* Startkostnader, inkl utbildning / experimenttid som kommer behövas.
+* Löpande kostnader.
+* Avtal avseende upptider, utryckning vid behov etc.
+* Support.
+* Säkerhetsaspekter.
+
+---
+
+Tillbakablick, reflektion, kommentarer ...
