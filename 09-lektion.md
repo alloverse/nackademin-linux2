@@ -68,9 +68,9 @@ https://www.youtube.com/watch?v=Pgltb5lnnLY
 
 # KVM
 
-* qemu för att sköta kontakten med värdmaskinens hårdvara
-* virsh för kommandoraden
-* virt-manager för GUI
+* `qemu` för att sköta kontakten med värdmaskinens hårdvara
+* `virsh` för kommandoraden
+* `virt-manager` för GUI
 
 ---
 
@@ -135,13 +135,21 @@ https://www.youtube.com/watch?v=Pgltb5lnnLY
 
 ---
 
-/// todo: bild
+# Övning 2
+
+![](img/kvm-ok.png)
 
 ---
 
 # Libvirt är en del av andra lösningar också
 
-/// todo: bild
+![](img/Libvirt_support.png)
+
+---
+
+<!-- _class: - invert - lead -->
+# KVM
+# <!--fit--> Bygg en VM
 
 ---
 
@@ -158,7 +166,35 @@ https://www.youtube.com/watch?v=Pgltb5lnnLY
 
 # virt-manager
 
-// todo: 5 bilder
+![](img/virtman01.jpg)
+
+---
+
+# virt-manager
+
+![](img/virtman02.jpg)
+
+---
+
+# virt-manager
+
+![](img/virtman03.jpg)
+
+---
+
+<!-- _class: - invert -->
+
+# virt-manager
+
+![bg](img/virtman04.jpg)
+
+---
+
+<!-- _class: - invert -->
+
+# virt-manager
+
+![bg](img/virtman05.jpg)
 
 ---
 
@@ -208,4 +244,134 @@ från https://computingforgeeks.com/virsh-commands-cheatsheet/
 * Installera en virtuell maskin på KVM.
 * Kontrollera att du kan starta och starta om din virtuella maskin.
 
+---
 
+# Övning 3
+
+* `virsh start CentOS7`
+* `virsh shutdown CentOS7`
+* `virsh start CentOS7`
+* `virsh reboot CentOS7`
+* `virsh dominfo CentOS7`
+
+---
+
+<!-- _class: - invert - lead -->
+# KVM
+# <!--fit--> Klona, flytta VM
+
+---
+
+# `virt-clone`
+
+* ”Clone”, skapa en kopia av en virtuell server med `virt-clone`
+* Maskinen som skall klonas behöver vara avstängd under kloningen
+* Syntax: `virt-clone --original {Domain-Vm-Name-Here} --name {New-Domain-Vm-Name-Here} --auto-clone`
+
+---
+
+# Övning 4
+
+Klona den virtuella maskin som du skapade i övning 3
+
+---
+
+# Övning 4: Lösning
+
+
+```bash
+$ sudo virt-clone --original CentOS7 --name CentOS7-2 –auto-clone
+$ virsh start CentOS7-2
+```
+
+---
+
+# Kopiera till annan fysisk server
+
+Inte en lika automatisk kloning som lokalt, men med enkla steg:
+1. Stäng ned VMen som skall kopieras.
+2. Kopiera image-filen från `/var/lib/libvirt/images` på den enba maskinen till den andra
+3. Plocka ut vm-definitionerna till en XML-fil som du kopierar till den ny aservern
+    `virsh dumpxml VMNAME > domxml.xml`
+4. Läs in vm-definitionerna på den nya servern
+    `virsh define domxml.xml`
+
+---
+
+<!-- _class: - invert - lead -->
+# KVM
+# <!--fit--> Nätverk
+
+---
+
+# Nätverk mellan virtuella maskiner
+
+* Default-uppsättning i kvm ger varje virtuell maskin en adress på nätet `192.168.122.0/24`
+* Värdmaskinen kan nås på `192.168.122.1` (din VMs gateway)
+* Notera att detta gäller för nätverksuppsättningen `hypervisor default`
+* Notera NAT-inställningar som har skapats i `iptables`
+
+---
+
+# Övning 5
+
+* Titta på dina virtuella maskiners nätverksinställningar och hitta vilka adresser de har fått
+* Testa förbindelsen mellan dina två virtuella maskiner (förslagsvis med `ping`)
+* Testa förbindelsen till `192.168.122.1`
+* Ta en titt på vad som hänt i `iptables` (på värdmaskinen)
+* Ta en titt på nätverksinterface `vibr0` (på värdmaskinen)
+
+---
+
+# Övning 5
+
+![](img/virt-eth01.jpg)
+![](img/virt-eth02.png)
+
+---
+
+# För nätverk utifrån: bridge
+
+* Skapa en brygga (bridge) för att göra virtuella maskiner tillgängliga genom nätverket
+* Använder sig av värdmaskinens nätverk
+* Fungerar inte med wlan
+* Definiera bryggan i `/etc/network/interfaces`
+* Starta om networking
+* Använd bryggan för att ange nätverkskoppling i nätverkskonfigurationen för virtuella maskiner (istället för`”default`)
+
+---
+
+# För nätverk utifrån: bridge
+
+Exempel med dhcp:
+
+    auto br0
+        iface br0 inet dhcp
+        bridge_ports eth0
+        bridge_stp off
+        bridge_fd 0
+        bridge_maxwait 0
+
+---
+
+# För nätverk utifrån: bridge
+
+Exempel med fast adress:
+
+    auto br0
+    iface br0 inet static
+        address 192.168.0.10
+        network 192.168.0.0
+        netmask 255.255.255.0
+        broadcast 192.168.0.255
+        gateway 192.168.0.1
+        dns-nameservers 192.168.0.5 8.8.8.8
+        dns-search example.com
+        bridge_ports eth0
+        bridge_stp off
+        bridge_fd 0
+        bridge_maxwait 0
+
+---
+
+Tillbakablick, reflektion, kommentarer ...

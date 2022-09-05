@@ -16,3 +16,4 @@ The slides are generated from markdown using [`marp`](https://marp.app/).
 
 * https://pdf.nimbletext.com
 * https://www.erase.bg/upload
+* https://pdfcandy.com/extract-images.html
