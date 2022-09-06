@@ -413,7 +413,7 @@ $ virsh net-autostart br0
 $ virsh edit centos8
     <interface type='network'>
       <mac address='52:54:00:e6:a9:57'/>
-      <source bridge='br0'/>
+      <source network='br0'/>
       <model type='virtio'/>
       <address type='pci' domain='0x0000' bus='0x01' slot='0x00' function='0x0'/>
     </interface>
