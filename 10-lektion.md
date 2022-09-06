@@ -99,7 +99,7 @@ _baserad på tabell från backblaze.com_
 
 ---
 
-# Docker
+# Inuti Docker
 
 ![bg fit right](img/docker.png)
 
@@ -113,8 +113,8 @@ _baserad på tabell från backblaze.com_
 
 # Installera Docker
 
-* https://www.youtube.com/watch?v=Vplj9b0L_1Y
 * https://docs.docker.com/engine/install/ubuntu/
+* https://www.youtube.com/watch?v=Vplj9b0L_1Y
 
 ---
 
@@ -135,6 +135,109 @@ $ sudo systemctl status docker # kolla så den funkar
 $ sudo docker run hello-world
 
 ```
+
+---
+
+# Övning 2
+
+* installera docker
+* Kör imagen "hello world"
+    `docker run hello-world`
+
+---
+
+<style scoped>
+    p, li { font-size: 21pt; }
+</style>
+
+# Docker-koncept: Images
+
+Som en disk image av en VM, eller ett apt-paket: packeterad mjukvara som går att köra som en enhet. Finns tusentals publicerade under https://hub.docker.com/search. 
+
+Heter ofta `publicerare/produkt:version`. Till exempel `bitnami/redis:7.0` är Bitnamis distribution av Redis, version 7.0.
+
+De flesta images är baserade på en annan: `bitnami/redis` är t ex baserad på `minideb`, minimal Debian.
+
+* `docker image ls`
+* `docker image rm` eller `docker rmi`, `docker image prune`
+* `docker image pull`, `docker image push`
+* etc... `docker help image`
+
+---
+
+# Docker-koncept: Container
+
+Varje gång du kör igång en image så skapas en ny container, dvs en instans av denna image. T ex om du kör igång apache-imagen två gånger så får du två containrar som kör varsin webbserver.
+
+* `docker ps` eller `docker container ls` -- vilka containrar är igång?
+* `docker ps -a` vilka finns på systemet, inkl stoppade?
+* `docker container attach` -- hoppa in interaktivt i en aktiv container
+* `docker kill` -- stäng av en container
+* etc... `docker help container`
+
+---
+
+<style scoped>
+    p, li { font-size: 19pt; }
+</style>
+
+
+# Docker-koncept: Run
+
+Kör igång en container från en image!
+
+* Interaktivt: `docker run -it bash` -- starta imagen "bash" och kör den:
+    * `-i`: interactive, keep stdin open
+    * `-t`: allocate a pseudo-TTY (dvs tillåt tangentbords-input)
+
+* Kör med ett kommando: `docker run -t bash echo hello`
+* Kör som daemon: `docker run -d -p 80:80 httpd`
+    * `-d`: Detach, receive no input nor output
+    * `-p cport:hport`: Exponera containers TCP-port till hostens TCP-port 
+* Ta bort containern efter körning: `docker run --rm`
+* etc... `docker help run`
+
+---
+
+# Övning 3
+
+Använd `bash` i en docker-container och skriv ut "hello world" med echo
+
+---
+
+# Övning 3
+
+```bash
+docker run -t bash echo "hello world"
+```
+
+---
+
+# Docker, lite viktiga kommandon
+
+* `docker run`
+* `docker info`
+* `docker ps`
+* `docker config`
+* `docker container`
+* `docker images`
+* `docker pull`
+
+---
+
+# Docker
+
+* Förbindelse mellan host och container
+* Containernamnet hittar man med `docker ps`
+* Kopiera filer till container:
+    `docker cp <fil> <container>:<path>`
+* Kopiera filer från container:
+    `docker cp <container>:<path/fil> <fil>`
+
+---
+
+# Övning 4
+
 
 ---
 
