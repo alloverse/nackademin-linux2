@@ -1,6 +1,6 @@
 ---
 marp: true
-title: Linux 2 DEVOPS21, Lektion 8
+title: Linux 2 DEVOPS21, Lektion 9
 theme: gaia
 paginate: true
 footer: Nackademin HT 2022 • Linux 2 DEVOPS21 • Alloverse AB
