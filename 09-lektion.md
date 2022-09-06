@@ -158,7 +158,7 @@ https://www.youtube.com/watch?v=Pgltb5lnnLY
 * Börja med att hämta en iso, lämpligen för någon minimerad Linux och kopiera den till `/var/lib/libvirt/boot/`
     ```
     cd /var/lib/libvirt/boot/
-    sudo wget http://ftp.lysator.liu.se/pub/CentOS/8.2.2004/isos/x86_ 64/CentOS-8.2.2004-x86_64-minimal.iso
+    sudo wget http://ftp.lysator.liu.se/pub/CentOS/7.9.2009/isos/x86_64/CentOS-7-x86_64-Minimal-2009.iso
     ```
 * Installera med virt-manager (GUI) eller virt-install (CLI)
 
@@ -330,47 +330,96 @@ Inte en lika automatisk kloning som lokalt, men med enkla steg:
 
 ---
 
-# För nätverk utifrån: bridge
+# Nätverksaccess: NAT
+
+![bg right fit](https://wiki.libvirt.org/images/d/d4/Host_with_a_virtual_network_switch_in_nat_mode_and_two_guests.png)
+
+* I `default` så agerar hosten NAT-router, och VMs kan inte nås från världen
+* https://wiki.libvirt.org/page/VirtualNetworking
+
+---
+
+# Nätverksaccess: Routed
+
+![bg right fit](https://wiki.libvirt.org/images/2/2c/Virtual_network_switch_in_routed_mode.png)
+
+* I "routed" mode skapar hosten ett nätverk, men utan NAT, så yttre nätverket kan konfigureras så trafik kan nå VMs (men yttre router måste confas)
+
+---
+
+<style scoped>
+    li { font-size: 20pt; }
+</style>
+
+# Nätverksaccess: Bridged
 
 * Skapa en brygga (bridge) för att göra virtuella maskiner tillgängliga genom nätverket
 * Använder sig av värdmaskinens nätverk
 * Fungerar inte med wlan
-* Definiera bryggan i `/etc/network/interfaces`
-* Starta om networking
-* Använd bryggan för att ange nätverkskoppling i nätverkskonfigurationen för virtuella maskiner (istället för`”default`)
+* Skulle kunna `ip link add`... men det är inte persistent
+* old-school var `/etc/network/interfaces`, men nuförtiden används netplan
+* Outdated men lättläst: https://linuxconfig.org/how-to-use-bridged-networking-with-libvirt-and-kvm
+* Modern men svårläst: https://www.answertopia.com/ubuntu/creating-an-ubuntu-kvm-networked-bridge-interface/
 
 ---
 
-# För nätverk utifrån: bridge
+# Nätverksaccess: Bridged
 
-Exempel med dhcp:
-
-    auto br0
-        iface br0 inet dhcp
-        bridge_ports eth0
-        bridge_stp off
-        bridge_fd 0
-        bridge_maxwait 0
+```yaml
+$ networkctl status -a # kolla vad ditt nätverkskort heter
+$ pico /etc/netplan/01-network-manager-all.yaml # definera bryggan
+network:
+  version: 2
+  renderer: NetworkManager
+  ethernets:
+    enp4s0:
+      dhcp4: true
+  bridges:
+    br0:
+      interfaces: [enp4s0]
+      dhcp4: yes
+$ sudo netplan apply # starta om networking
+```
 
 ---
 
-# För nätverk utifrån: bridge
+# Nätverksaccess: Bridged
 
-Exempel med fast adress:
+```bash
+$ nmcli con add ifname br0 type bridge con-name br0
+# koppla bryggan till fysiska nätverks-kortet
+$ nmcli con add type bridge-slave ifname enp4s0 master br0
+# byt nätverkskort från fysiska till bryggan
+$ nmcli con down netplan-enp4s0
+$ nmcli con up br0
+# skapa kortet i libvirt
+$ cat > bridge.xml
+<network>
+  <name>br0</name>
+  <forward mode="bridge"/>
+  <bridge name="br0" />
+</network>
+```
 
-    auto br0
-    iface br0 inet static
-        address 192.168.0.10
-        network 192.168.0.0
-        netmask 255.255.255.0
-        broadcast 192.168.0.255
-        gateway 192.168.0.1
-        dns-nameservers 192.168.0.5 8.8.8.8
-        dns-search example.com
-        bridge_ports eth0
-        bridge_stp off
-        bridge_fd 0
-        bridge_maxwait 0
+---
+
+# Nätverksaccess: Bridged
+
+```bash
+$ virsh net-define bridge.xml
+$ virsh net-start br0
+$ virsh net-autostart br0
+# ... och sen använd `br0` istället för `default` på din virtuella maskin.
+$ virsh edit centos8
+    <interface type='network'>
+      <mac address='52:54:00:e6:a9:57'/>
+      <source bridge='br0'/>
+      <model type='virtio'/>
+      <address type='pci' domain='0x0000' bus='0x01' slot='0x00' function='0x0'/>
+    </interface>
+
+
+```
 
 ---
 
