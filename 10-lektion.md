@@ -8,7 +8,7 @@ footer: Nackademin HT 2022 • Linux 2 DEVOPS21 • Alloverse AB
 <!-- _class: - gaia -->
 
 # <!--fit--> Linux 2 <br> DEVOPS 2021 
-## Lektion 9
+## Lektion 10
 
 ---
 
@@ -266,8 +266,9 @@ Detta är bara ett exempel: det här är inte ett bra sätt att använda Docker.
 
 # Bättre: `Dockerfile` & `docker build`
 
-* Beskriver innehållet i en docker image
-* Börjar nästan alltid med en "FROM" -- din bas-image
+* Dockerfile beskriver innehållet i en docker image
+* Börjar nästan alltid med en `FROM` -- din bas-image
+* Varje rad blir ett eget filsystem! Bara förändringar leder till ombygge.
 * Byggs med `docker build`
 * Läggs då till i ditt lokala image-bibliotek
 
@@ -288,13 +289,17 @@ CMD ["echo", "hello world!"]
 FROM python:3
 # set a directory for the app
 WORKDIR /usr/src/app
-# copy all the files to the container
-COPY . .
-# install dependencies
-RUN pip install --no-cache-dir -r requirements.txt
 # define the port number the container should expose
 EXPOSE 5000
-# run the command
+
+# copy deps as a separate cache layer
+COPY requirements.txt
+# install dependencies
+RUN pip install --no-cache-dir -r requirements.txt
+# Copy rest of app
+COPY *.py .
+
+# Run this when starting the container
 CMD ["python", "./app.py"]
 ```
 
@@ -355,7 +360,33 @@ $ sudo docker run counter
 * Finns många grunduppsättningar (images) att utgå från
 * Deploy av egna program genom egna images som använder sig av dessa som bas
 * Väldigt snabb deploy när konfigurationen väl är gjord
+* Använd layers i era images!
 
+---
+
+```docker
+# Exempel från https://github.com/alloverse/alloplace2
+FROM ubuntu:20.04 # was gcc:9, is ubuntu just for libretro
+
+WORKDIR /alloplace2
+EXPOSE 21337/udp
+
+ENV DEBIAN_FRONTEND=noninteractive
+RUN apt-get update && apt-get install -y build-essential \
+    cmake curl libgme-dev libcairo2 libpoppler-glib-dev \
+    retroarch libretro-nestopia libretro-genesisplusgx libretro-snes9x \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+
+# build and compile server with dependencies
+COPY deps /alloplace2/deps
+COPY src /alloplace2/src
+COPY CMakeLists.txt /alloplace2
+
+RUN cd build; cmake ..; make
+
+CMD cd /alloplace2; ./build/alloplace2
+```
 
 
 ---
