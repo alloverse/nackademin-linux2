@@ -250,7 +250,7 @@ docker run -t bash echo "hello world"
 
 ```bash
 $ cat > mycounter.sh
-#!/bin/bash
+#!/usr/bin/env bash
 for i in {1..10}
 do
     echo $i
@@ -396,12 +396,136 @@ CMD cd /alloplace2; ./build/alloplace2
 
 ---
 
+# IaC: Infrastructure as Code
+
+* All infrastruktur provisioneras och konfigureras genom källkod: en uppsättning definitionsfiler.
+* Genom att bara köra ett kommando så kan man skapa och konfigurera hela miljöer.
+* Mycket mindre administration och lättare att maintaina flera miljöer
+* Ersätter att klicka runt i webb-interface
+* Exempel: Chef, Puppet, Ansible, Terraform
+
+---
+
+# IaC: Infrastructure as Code
+
+> Infrastructure as code (IaC) is the process of managing and provisioning computer data centers through machine-readable definition files, rather than physical hardware configuration or interactive configuration tools. The IT infrastructure managed by this process comprises both physical equipment, such as bare-metal servers, as well as virtual machines, and associated configuration resources.
+
+---
+
+# IaC: Infrastructure as Code
+
+* Deskriptiv modell för att hantera på infrastruktur
+    * Fysiska och virtuella maskiner
+    * Nätverk och nätverkstopologi
+    * Lastbalansering
+* Versionshantering för den uppbyggda infrastrukturen
+* Egentligen samma principer som för att hantera applikationer inom DevOps
+
+---
+
+# IaaS: Infrastructure as a Service
+
+* Abstraherar tillgång till fysiska resurser
+* Ger tillgång till nätverk, servrar, etc
+* APIer av olika slag för att allokera ("provisionera") och använda resurser
+* med andra ord: aws, gcp, azure och dylika.
+
+---
+
+> Infrastructure as a service (IaaS) are online services that provide high-level APIs used to dereference various low-level details of underlying network infrastructure like physical computing resources, location, data partitioning, scaling, security, backup etc.
+
+---
+
+# IaC vs IaaS
+
+* IaC är instruktionerna
+* IaaS tar emot instruktionerna och levererar servicen
+
 ---
 
 <!-- _class: - invert - lead -->
 # <!--fit--> Ansible 
 
 ---
+
+# Ansible
+
+* Verktyg för IaC
+* Konfigurationshantering
+* Automatisering av återkommande uppgifter
+* Öppen källkod + RedHat-moduler
+* https://www.ansible.com/
+
+---
+
+# Ansible
+
+> Ansible is an open-source software provisioning, configuration management, and application-deployment tool enabling infrastructure as code. It runs on many Unix- like systems, and can configure both Unix-like systems as well as Microsoft Windows. It includes its own declarative language to describe system configuration.
+
+---
+
+# Ansible
+
+* Inventory i textfiler
+* ssh som normal inloggning
+* Köra kommandon på flera noder parallellt
+* Playbooks för orkestrering
+* I teorin deklarativt ("min backend ska se ut SÅHÄR"), i praktiken ofta imperativt ("GÖR DETHÄR med min backend")
+
+---
+
+```ini
+$ cat inventory.ini
+[webservers]
+foo.example.com
+bar.example.com
+
+[dbservers]
+one.example.com
+two.example.com
+three.example.com
+```
+
+---
+
+```yaml
+$ cat playbook.yml
+- name: Update web servers
+  hosts: webservers
+  remote_user: root
+
+  tasks:
+  - name: Ensure apache is at the latest version
+    ansible.builtin.yum:
+      name: httpd
+      state: latest
+  - name: Write the apache config file
+    ansible.builtin.template:
+      src: /srv/httpd.j2
+      dest: /etc/httpd.conf
+
+- name: Update db servers
+  hosts: dbservers
+  remote_user: root
+
+  tasks:
+  - name: Ensure postgresql is at the latest version
+    ansible.builtin.yum:
+      name: postgresql
+      state: latest
+  - name: Ensure that postgresql is started
+    ansible.builtin.service:
+      name: postgresql
+      state: started
+```
+
+---
+
+```bash
+$ ansible-playbook playbook.yml -f 10
+```
+
+Exempel från https://docs.ansible.com/ansible/latest/user_guide/index.html
 
 ---
 
