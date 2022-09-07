@@ -529,10 +529,170 @@ Exempel från https://docs.ansible.com/ansible/latest/user_guide/index.html
 
 ---
 
+# Ansible för att provisiona AWS
+
+Exempel från https://www.redhat.com/sysadmin/ansible-provisioning-aws-cloud, bara för att visa hur meckigt det är jämfört med Terraform ;)
+
+---
+
+```yaml
+- name: Launching EC2 instances
+  community.aws.ec2_instance:
+    #aws_access_key: "{{ec2_access_key}}"
+    #aws_secret_key: "{{ec2_secret_key}}"
+    profile: "{{ aws_boto_profile }}"
+    key_name: "{{ aws_demo_key }}"
+    security_group: "{{ aws_security_group }}"
+    instance_type: "{{ item.value.instance_type }}"
+    image_id: "{{ aws_ami_id }}" 
+    state: present
+    wait: yes
+    wait_timeout: 300
+    region: "{{ aws_region }}"
+    tags:
+       Name: "{{ item.value.name }}"
+    detailed_monitoring: no
+    vpc_subnet_id: "{{ vpc_subnet_list | random }}"
+    network:
+      assign_public_ip: yes
+  loop: "{{ lookup('dict', ec2_new_list, wantlist=True) }}"
+```
+
+---
+
+```yaml
+- name: Create Security group
+  amazon.aws.ec2_group:
+    profile: "{{ aws_boto_profile }}"
+    name: "{{ aws_security_group }}"
+    description: 'Security Group with SSH and HTTP rules'
+    vpc_id: "{{ aws_vpc_id }}"
+    region: "{{ aws_region }}"
+    rules:
+      - proto: tcp
+        ports:
+        - 80
+        cidr_ip: 0.0.0.0/0
+        rule_desc: allow all on port 80
+      - proto: tcp
+        ports:
+        - 22
+        cidr_ip: 0.0.0.0/0
+        rule_desc: allow all on port 22 
+```
+
+---
+
 <!-- _class: - invert - lead -->
 # <!--fit--> Terraform
 
 ---
+
+# Terraform av HashiCorp
+
+* Verktyg för IaC
+* Ett provisioning-verktyg snarare än ett konfigurationshanterings-verktyg
+    * dvs, "skapa servrar" snarare än "gör sak X på alla servrar"
+    * Kan kombineras med konfigurationshantering
+    * Men om man använder docker behövs knappt det
+* Beskriv hur din infrastruktur ser ut, deklarativt
+* https://www.terraform.io/
+
+---
+
+> Configuration management tools such as Chef, Puppet, Ansible, and SaltStack typically default to a mutable infrastructure paradigm. For example, if you tell Chef to install a new version of OpenSSL, it’ll run the software update on your existing servers and the changes will happen in-place. Over time, as you apply more and more updates, each server builds up a unique history of changes. This often leads to a phenomenon known as **configuration drift**, where each server becomes slightly different than all the others, leading to subtle configuration bugs that are difficult to diagnose and nearly impossible to reproduce.
+
+---
+
+<style scoped>
+    code { font-size: 16pt; }
+</style>
+
+# Deklarativt vs imperativt
+
+```yaml
+- ec2:
+    count: 10
+    image: ami-v1    
+    instance_type: t2.micro
+```
+
+```terraform
+resource "aws_instance" "example" {
+  count         = 10
+  ami           = "ami-v1"
+  instance_type = "t2.micro"
+}
+```
+
+Vad händer om du ändrar count till 15? Ansible: 25, Terraform 15.
+
+---
+
+```
+$ terraform plan
++ aws_instance.example.11
+    ami:                      "ami-v1"
+    instance_type:            "t2.micro"
++ aws_instance.example.12
+    ami:                      "ami-v1"
+    instance_type:            "t2.micro"
++ aws_instance.example.13
+    ami:                      "ami-v1"
+    instance_type:            "t2.micro"
+    ...
+
+Plan: 5 to add, 0 to change, 0 to destroy.
+```
+
+https://blog.gruntwork.io/why-we-use-terraform-and-not-chef-puppet-ansible-saltstack-or-cloudformation-7989dad2865c
+
+---
+
+# Terraform: kom igång
+
+```bash
+$ aws configure # sätter AWS_ACCESS_KEY_ID och AWS_SECRET_ACCESS_KEY
+$ mkdir myinfra; cd myinfra
+$ terraform init
+$ pico main.tf
+provider "aws" {
+  region = "us-east-2"
+}
+resource "aws_instance" "example" {
+  ami           = "ami-0c55b159cbfafe1f0"
+  instance_type = "t2.micro"
+}
+$ terraform apply
+```
+
+---
+
+```
+$ terraform apply
+Terraform will perform the following actions:
+  # aws_instance.example will be created
+  + resource "aws_instance" "example" {
+      + ami                          = "ami-0c55b159cbfafe1f0"
+      + arn                          = (known after apply)
+...
+      (...)
+  }
+  
+  Plan: 1 to add, 0 to change, 0 to destroy.
+
+  Do you want to perform these actions?
+  
+  Terraform will perform the actions described above.
+  Only 'yes' will be accepted to approve.
+  Enter a value: yes
+
+aws_instance.example: Creating…
+aws_instance.example: Creation complete after 38s
+
+Apply complete!
+Resources: 1 added, 0 changed, 0 destroyed.
+  ```
 
 ---
 
