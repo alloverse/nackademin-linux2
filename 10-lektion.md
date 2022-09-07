@@ -238,6 +238,125 @@ docker run -t bash echo "hello world"
 
 # Övning 4
 
+* Gör ett enkelt skript som räknar från 1 till 10 med en sekunds paus för varje steg
+* Starta bash i en docker-container
+* Kopiera scriptet till din container (lägg det t ex under /tmp)
+* Kör scriptet i din container
+* Observera intressanta saker kring sökvägar och att scriptet i containtern bara finns så länge som containern finns
+
+---
+
+# Övning 4
+
+```bash
+$ cat > mycounter.sh
+#!/bin/bash
+for i in {1..10}
+do
+    echo $i
+    sleep 1
+done
+$ docker run -it bash
+$ docker cp ./mycounter.sh fa381cde7ee1:/tmp # separat terminal
+```
+
+Detta är bara ett exempel: det här är inte ett bra sätt att använda Docker. Använd inte `docker cp`.
+
+---
+
+# Bättre: `Dockerfile` & `docker build`
+
+* Beskriver innehållet i en docker image
+* Börjar nästan alltid med en "FROM" -- din bas-image
+* Byggs med `docker build`
+* Läggs då till i ditt lokala image-bibliotek
+
+---
+
+# `Dockerfile`, exempel 1
+
+```docker
+FROM alpine
+CMD ["echo", "hello world!"]
+```
+
+---
+
+# `Dockerfile`, exempel 2
+
+```docker
+FROM python:3
+# set a directory for the app
+WORKDIR /usr/src/app
+# copy all the files to the container
+COPY . .
+# install dependencies
+RUN pip install --no-cache-dir -r requirements.txt
+# define the port number the container should expose
+EXPOSE 5000
+# run the command
+CMD ["python", "./app.py"]
+```
+
+---
+
+# `docker build`
+
+Bygg en image från den `Dockerfile` som finns i en mapp. Anropas vanligen som:
+    `docker build -t <imagenamn> <mapp som har Dockerfile>`
+
+e g: `sudo docker build -t helloworld .` för att bygga imagen från nuvarande mapp (`.`).
+
+Om du inte anger version så kommer du skapa/omdefinera `latest` (dvs ovanstående blir `helloworld:latest`).
+
+---
+
+# Övning 5
+
+* Plocka hem `alpine` att använda som bas för en egen enkel image
+* Testa att köra `alpine` i docker
+* Skapa en Dockerfile för en image `hello` som är din egen implementation av ett ”hej världen”
+* Bygg och kör din image
+
+---
+
+# Övning 5
+
+```docker
+$ cat > Dockerfile
+FROM alpine
+CMD ["echo", "hello world"]
+```
+
+---
+
+# Övning 6
+
+* Skapa nu en Dockerfile för en image `counter` som kör ditt räkneskript (det som räknar från 1 till 10) under `bash`
+* Bygg och kör din image
+
+---
+
+# Övning 6
+
+```docker
+$ cat > Dockerfile
+FROM bash
+COPY mycounter.sh .
+CMD ["bash", "./mycounter.sh"]
+$ sudo docker build -t counter .
+$ sudo docker run counter
+```
+
+---
+
+# Docker: addendum
+
+* Finns många grunduppsättningar (images) att utgå från
+* Deploy av egna program genom egna images som använder sig av dessa som bas
+* Väldigt snabb deploy när konfigurationen väl är gjord
+
+
 
 ---
 
