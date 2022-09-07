@@ -655,6 +655,21 @@ https://blog.gruntwork.io/why-we-use-terraform-and-not-chef-puppet-ansible-salts
 $ aws configure # sätter AWS_ACCESS_KEY_ID och AWS_SECRET_ACCESS_KEY
 $ mkdir myinfra; cd myinfra
 $ terraform init
+```
+
+syntax:
+
+```terraform
+resource {typ av resurs} {namn på resurs} {
+    {nyckel} = {värde}
+    {annan nyckel} = {annan typ}.{annat namn}.{nyckel i den resursen}
+}
+
+```
+
+---
+
+```bash
 $ pico main.tf
 provider "aws" {
   region = "us-east-2"
@@ -662,9 +677,24 @@ provider "aws" {
 resource "aws_instance" "example" {
   ami           = "ami-0c55b159cbfafe1f0"
   instance_type = "t2.micro"
+  security_group = aws_security_group.example.id
+}
+resource "aws_security_group" "example" {
+  ingress {
+    from_port = 80
+    to_port = 80
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  egress {
+    from_port = 0
+    to_port = 65535
+    cidr_blocks = ["0.0.0.0/0"]
+  }
 }
 $ terraform apply
 ```
+
+
 
 ---
 
@@ -692,7 +722,16 @@ aws_instance.example: Creation complete after 38s
 
 Apply complete!
 Resources: 1 added, 0 changed, 0 destroyed.
-  ```
+```
+
+---
+
+# Terraform: addendum
+
+* Versionshantera dina tf-filer i Git
+* Men använd "terraform backend s3" så att state-filen ligger i S3, inte i Git
+* `terraform taint` för att tvinga omskapande = uppdatera till senaste versionen (dvs fuska och låtsas att terraform är konfigurationshantering)
+* finns många sätt att skapa miljöer (workspaces, moduler, etc) -- se i demo av `allo-infra`
 
 ---
 
