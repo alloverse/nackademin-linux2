@@ -185,3 +185,105 @@ https://opensource.com/article/18/9/linux-iptables-firewalld
 # <!--fit--> Härdning
 
 ---
+
+# Härdning
+
+* Vad skall finnas på just den här servern?
+* Vem skall ha tillgång till just den här servern?
+* Härdning: Se till att bara det som behöver vara öppet är öppet och att bara den som behöver tillgång får tillgång
+
+ ---
+
+ # Härdning: Allmäna åtgärder
+
+
+* Gå igenom listan över existerande daemoner / services
+    `systemctl list-units --all`
+* Gå igenom listan över installerade paket
+    `apt list --installed`
+* Ingen inloggning som root – använd `sudo` istället
+    `sudo passwd -l root`
+
+---
+
+# Övning 5
+* Gå igenom listan över existerande services på din maskin. Vilka av dem används idag?
+* Gå igenom listan över installerade paket på din maskin. Vilka av dem använder du dig av?
+
+---
+
+<style scoped> li { font-size: 20pt; } </style>
+
+# Härdning: kommunikation
+ 
+* Ha koll på öppna portar (brandvägg eller iptables)
+    * `iptables -L`
+    * `netstat -a | grep tcp | grep LISTEN`
+* Undvik okrypterade protokol: `ftp`, `telnet`, etc. 
+    * se till att deras daemons inte är igång/installerade.
+    * blockera deras portar
+* Om möjligt, undvik att ha några underhållsprotokoll igång: ingen ssh, etc. ("immutable infrastructure")
+* Använd krypterade protokoll: https inte http, ssh inte telnet, etc. 
+* Stäng av ICMP. Det kommer inte gå att pinga servern = inte lika lätt att hittas av botnets
+
+---
+
+# Övning 6
+Gå igenom listan på öppna portar som lyssnar utåt på din maskin. Vet du vilka program de hör till?
+
+---
+
+# Härdning: användare
+
+* Tvinga **INTE** återkommande lösenordsbyten! Det leder till osäkrare system. 
+* Lås konto efter ett antal misslyckade inloggningsförsök (använd `pam_tally2` eller skript som tittar i faillog och räknar samt passwd -l för att låsa konto)
+* Tillåt endast säkra lösenord (t ex med `libpam-pwquality`)
+
+
+Läs mer om NISTs senaste rekommendationer: https://www.throttlenet.com/blog/technology-news/nist-password-guidelines-2022-challenging-traditional-password-policies/
+
+---
+
+# Härdning: permissions
+
+* Kör inte daemoner som root eller som din admin-användare. Skapa användare+grupp för varje daemon istället. (e g `apache2` kör som `www`, `mysql` kör som `mysql` osv.)
+* Ge dessa användare sedan minimala permissions för att bara göra exakt det de ska
+* Ge andra användare access till dessa genom att tilldela grupp (så som `docker` funkar om du tilldelar gruppen `docker`)
+* Inga `777`or, inget world-writable
+
+---
+
+# Härdning: bonus
+
+* Kolla upp SELinux, RedHat-standard för kraftfullare säkerhetsinställningar.
+* Kör allt i containrar och VMs, så lite som möjligt på fysisk hårdvara
+* Uppdatera mjukvara regelbundet, kanske automatiserat eller enligt process
+* Var väldigt försiktig med `SUID` och `SGID` (`find / -perm +4000`)
+* Finns mycket mer! random artikel: https://www.cyberciti.biz/tips/linux-security.html
+
+---
+
+# Övning 8
+
+* Antag att ni skall härda två Linuxservrar för drift. Nr1 skall användas som webbserver. Nr2 skall användas för en MySQL-databas som nr1 hämtar data från.
+* Hur härdar ni respektive server? Gör en åtgärdslista för vardera (och testa gärna konkreta kommandon).
+
+---
+
+# Övning 8
+
+* Gemensamt för båda servrarna:
+    * Öppet för ssh-trafik för övervakning / underhåll, i övrigt stängt för inkommande trafik förutom undantag nedan.
+    * Minimalt antal användarkonton, enbart individuella konton tillåter inloggning, kontroll av sudo-rättigheter, tvinga säkra lösenord
+    * Ingenting igång som inte behöver vara igång.
+* Nr1: Öppet för https utifrån.
+* Nr2: Öppet för trafik till MySQL (port 3306) från server nr1.
+
+
+---
+
+<!-- _class: - invert - lead -->
+
+# <!--fit--> SSL/TLS
+
+---
