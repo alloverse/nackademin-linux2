@@ -154,6 +154,21 @@ Grundkoncept:`tables` innehåller `chains` innehåller `rules`.
 
 ---
 
+<style scoped> li, p { font-size: 22pt; }</style>
+
+# interlude: `iptables` vs `nftables`
+
+* `iptables` ersatte en gång i tiden `ipchains`, vilket i sin tur ersatte `ipfw`.
+* `iptables` på kernelsidan är deprecated,  ersätts av "nya" **`nftables`**.
+* `iptables-nft` portar iptables-syntax till nya nftables-kernel-APIt.
+* `iptables` userspace kommer nog finnas länge till, men om du vill djupdyka är en investering i `nftables` kanske smartare. Se `iptables-translate`.
+* blanda inte `iptables-legacy` med `iptables-nft`.
+* hinner inte skriva om alla slides till nftables innan måndagens lektion :/
+
+https://developers.redhat.com/blog/2020/08/18/iptables-the-two-variants-and-their-relationship-with-nftables
+
+---
+
 # Övning 2
 
 Se hur din lokala iptables ser ut med `sudo iptables -L -v`.
@@ -167,7 +182,7 @@ Lägg speciellt märke till vilka tre chains du ser i defaulttabellen `filter`.
 ---
 
 # iptables: tables
-Finns fem fördefinerade tabeller, men vi kommer mest bry oss om tabellen `filter` (den är default)
+Finns fem fördefinerade tabeller (`raw`, `filter`, `nat`, `mangle`, `security`), men vi kommer mest bry oss om tabellen `filter` (den är default).
 
 ---
 
