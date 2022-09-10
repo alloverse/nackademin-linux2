@@ -18,12 +18,117 @@ footer: Nackademin HT 2022 • Linux 2 DEVOPS21 • Alloverse AB
 * Säkerhetstänkande och riskbedömningar på olika nivåer
 * iptables
 * Härdning
+* SSL/TLS
 
 ---
 
 <!-- _class: - invert - lead -->
 
 # <!--fit--> Säkerhetstänk
+
+---
+
+# Säkerhet på många nivåer
+
+* Veta vem som skall ha tillgång till vad
+* Skalskydd (koll på fysisk tillgång)
+* Värdering av tillgångar
+* Medvetande och kunskap inom organisationen
+* IT-säkerhet
+
+---
+
+# Veta vad man vill skydda och varför
+
+* Vad är värdet?
+* Vilka är riskerna?
+* Vad är det värt att skydda det här?
+
+---
+
+# IT-säkerhet
+
+* Driftsäkerhet -- att systemen är uppe när de förmodas vara uppe, tillräckligt stabila, etc
+* Dataskydd -- att endast behöriga kommer åt uppgifter
+* Tillförlitlighet -- att de uppgifter som finns i systemet är korrekta
+
+---
+
+![bg fit](img/osi-attack.jpeg)
+
+---
+
+# Social engineering
+
+* Tekniska lösningar kan inte avhjälpa mänskliga svagheter
+* Vaksamhet på rätt nivå
+* Veta vem som får tillgång tillvad
+
+---
+
+# Se realistiskt på de faktiska riskerna
+
+![bg 45%](https://imgs.xkcd.com/comics/security.png)
+
+---
+
+# Risker
+
+* Gå igenom riskerna kring ett system
+    * Vad kan hända här?
+* Värdera
+    * Hur troligt är det att det händer?
+    * Hur allvarligt är det om det händer?
+*  Besluta om åtgärder för att riskerna skall anses vara på acceptabel nivå
+
+---
+
+# Exempel på riskanalys
+
+|Risk|Sannolikhet|Konsekvens|Riskvärde|Åtgärder
+|----|-----------|----------|---------|--------
+|Skriver fel|5|1|5 (låg)|-
+|Datorexplosion|4|5|20 (hög)|Andra datorer
+|Sladd ur|2|4|8 (låg)|-
+
+---
+
+# Övning 1
+
+* Hitta så många risker ni kan komma på för genomförande av en kurs på Nackademin
+* Värdera riskerna
+* Föreslå åtgärder för risker med riskvärde >=10
+
+---
+
+|Risk|Sannolikhet|Konsekvens|Riskvärde|Åtgärder
+|----|-----------|----------|---------|--------
+|Oklar kursplan|3|4|12|Klargöranden
+|Ingen lärare|3|5|15|Säkrad tillgång
+|Teknikproblem|4|1|4|-
+|Sjuk student|3|4|12|Material på nät
+|Inställd lektion|2|2|4|-
+
+---
+
+# Tekniska lösningar på tekniska problem
+
+* Nätverk – vad behöver vara öppet
+    * Bra brandväggar
+    * Avdelade nätverk
+    * Skilja på internt nät och DMZ
+* Ordentligt modulär och flerskiktat arkitektur
+* Tillräckligt stark autentisering
+* Kryptering
+
+---
+
+# Bonus: säkerhet vs UX
+
+* För hög säkerhetsnivå = folk hittar genvägar
+    * lösenord på post-its
+    * ställer upp den jobbigga dörren)d
+
 
 ---
 <!-- _class: - invert - lead -->
@@ -158,7 +263,7 @@ $ open https://www.generationt.se
 
 Tänk dig att du gör iptables-konfigurationen för en "kiosk" enligt bilden nedan. Skapa rätt iptables. (om du experimenterar med en dator över teamviewer, se till att hålla öppet för det protokollet!)
 
-// todo: bild
+![width:500px](img/iptables2.jpg)
 
 ---
 
