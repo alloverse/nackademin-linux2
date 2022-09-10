@@ -407,3 +407,62 @@ Läs mer om NISTs senaste rekommendationer: https://www.throttlenet.com/blog/tec
 # <!--fit--> SSL/TLS
 
 ---
+
+<style scoped> li { font-size: 20pt; } </style>
+
+
+# TLS
+
+* Används för i princip all krypterad trafik, men du kommer framförallt stöta på det i termer av HTTP
+* Certifikat: En dokument som säger att en pålitlig tredje-part verifierar att den som håller certifikatet är den som den påstår
+* Bundet till en domän (kan vara wildcard). "Hänglåset" i adressfältet.
+* Verifierat av en _Certificate Authority_ (CA).
+
+![bg fit right](img/cert2.png)
+
+---
+
+# TLS
+
+
+* Köp certifikat av en `Certificate Authority`, CA. letsencrypt.com är en bra gratis CA.
+* Certifikat+nyckel är Filer som du lägger på webbservern och ställer in i e g Apaches config per-domän/virtual host
+* Gäller en tidsperiod och går ut.
+* Automatisera!! 2yr expiry och manuell process = NÅGON KOMMER GLÖMMA = **SAJT GÅR NER**
+* certbot + 3mån expiry + DNS records!
+
+---
+
+# TLS
+
+* Säkerhet: TLS uppdateras kontinuerligt. Viktigt att hålla koll på nyheter -- e g, `SSL 1.0`-`3.0`, `TLS 1.0` och `TLS 1.1` är deprecated och bör aktivt stängas av i servrar. 
+* Web of trust: lookback.com verifieras av Cloudflare. Cloudflare verifieras av Baltimore CyberTrust. Operativsystemet litar på alla "root certificates", bl a BCT.
+* `/etc/ssl/certs/` för alla root-certs
+
+---
+
+<style scoped> li { font-size: 20pt; } </style>
+
+
+# TLS
+
+* Vid utveckling: self-signed certificate. Webbläsare kommer klaga, men funkar.
+* https://www.digitalocean.com/community/tutorials/how-to-create-a-self-signed-ssl-certificate-for-apache-in-ubuntu-16-04, sammanfattning:
+    ```apache
+    $ sudo a2enmod ssl
+    $ sudo openssl req -x509 -nodes -days 365 -newkey rsa:2048 -keyout /etc/ssl/private/selfsign.key \
+        -out /etc/ssl/certs/selfsign.crt
+    $ sudo nano /etc/apache2/sites-available/minsajt.conf
+    <VirtualHost *:443>
+        ServerName minsajt.com
+        DocumentRoot /var/www/minsajt.com
+        SSLEngine on
+        SSLCertificateFile /etc/ssl/certs/selfsign.crt
+        SSLCertificateKeyFile /etc/ssl/private/selfsign.key
+    </VirtualHost>
+    $ sudo systemctl reload apache2
+    ```
+
+---
+
+Tillbakablick, reflektion, kommentarer...
