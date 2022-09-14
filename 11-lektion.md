@@ -48,13 +48,13 @@ footer: Nackademin HT 2022 • Linux 2 DEVOPS21 • Alloverse AB
 # Farid, Pål, Zuhat, Arif, Shoreh
 ---
 <!-- _class: - invert - lead -->
-# <!--fit--> Grupp 5
-# Victor, Dåkan, Marcus B, Lana, Li
+# <!--fit--> Grupp 7
+# Fredrik Barre, Fredrik Buö, Philip, Zsofia
+
 ---
 <!-- _class: - invert - lead -->
 # <!--fit--> Grupp 2
 # Klas, Dennis, Ulf, Usko
-
 
 
 ---
@@ -200,6 +200,40 @@ $ crontab -e
 0 8-18 * * 1-5  mysqldump --databases mydb1 >/opt/backup/mydb1[`date +\%Y\%m\%d:\%H_\%M`].sql
 0 5    * * *    find /opt/backup -mtime +3 -exec rm {} \;
 ```
+
+---
+<!-- _class: - invert - lead -->
+# <!--fit--> Tips & tricks
+---
+
+# fish: bästa shellet
+
+![height:360px](https://fishshell.com/assets/img/screenshots/autosuggestion.png)
+
+https://fishshell.com
+
+---
+
+* `^A`, `^E`, alt-pilarna: början, slutet, hoppa ord
+* `^W`, `^D`: ta bort ord, ta bort tecken
+* `^C`, `^D`: avsluta, exit
+* Bash: `^R` (men inbyggt i fish): reverse history search
+* `code .`: vscode för nuvaranda mapp
+* `open .`: öppna default-app för fil/mapp i GUI
+* git-status i prompten
+
+---
+
+# `screen`/`tmux`
+
+* ha flera terminaler i en
+* split screen, etc
+* flera tabbar i remote
+* detach!! ^A-^D
+    * `screen -r`
+    * lämna interakt script igång (e g på remote host) och kom tillbaka till senare
+
+
 
 ---
 
