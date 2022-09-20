@@ -510,8 +510,9 @@ done
 * Uppgiften utförs i grupp, helst 3-4 personer
 * Att genomföra uppgiften är ett krav för godkänd kurs
 * De som gör en godkänd redovisning på någon av de avsatta tiderna sista kursveckan får dessutom 2 bonuspoäng på tentan
-    * Sikta på att redovisa onsdag 14/9!
-    * Reservtider för redovisning torsdag 15/9
+    * Ladda upp slides och zip med källkod till Studentportalen innan end-of-day 11/10
+    * Sikta på att redovisa onsdag 12/10!
+    * Reservtider för redovisning på distans torsdag 13/10
 
 ---
 
