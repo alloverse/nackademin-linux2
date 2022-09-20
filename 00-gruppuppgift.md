@@ -5,9 +5,10 @@
 
 * Uppgiften utförs i grupp, helst 3-4 personer.
 * Att genomföra uppgiften är ett krav för godkänd kurs.
-* Presentationerna kommer att ska den 14/9 samt 15/9 (halvdag).
-* Inlämning av uppgiften på studentportalen av allt material 13/9 23:59
-
+* Presentationer
+    * Ladda upp slides och zip med källkod till Studentportalen innan end-of-day 11/10
+    * Sikta på att redovisa onsdag 12/10!
+    * Reservtider för redovisning på distans torsdag 13/10
 
 ## Scenario
 
@@ -36,6 +37,7 @@ Redovisning görs muntligt, med demo, inför hela klassen onsdag 14 september el
 * Redovisningen skall presentera resonemang om hur ni valt era miljöer och varför.
 * Redovisningen skall innehålla ett element av riskanalys.
 * Redovisningen skall visa en demo av hur ni byggt miljöerna.
+* Berätta vem som haft huvudansvar för vilka delar av uppgiften (även om ni givetvis hjälpts åt att lösa alla delar).
 
 Redovisningen bör ta 10-15 minuter per grupp. Den skall alltså inte enbart vara tre minuters demo av färdigbyggda miljöer utan vidare förklaringar, men inte heller vara en timmes föreläsning.
 
