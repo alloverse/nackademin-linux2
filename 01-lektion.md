@@ -279,11 +279,17 @@ visudo
 
 #  Köra som annan användare
 
-(Framförallt för att bli root, men funkar även med andra användare)
+Skapa ett nytt shell som en annan användare. (Framförallt för att bli root, men funkar även med andra användare)
 
 ```bash
 su <username>    # behåll environment
 su - <username>  # nollställ environment
+```
+
+Kom tillbaka till föregående shellet:
+
+```bash
+exit # eller ^D
 ```
 
 ---
@@ -346,7 +352,11 @@ li {
     * `sudo apt install openssh-server`
     * `systemctl start sshd`
     * Testa: `ssh localhost`
-* ”Secure Shell (SSH) is a cryptographic network protocol for operating network services securely over an unsecured network. Typical applications include remote command-line, login, and remote command execution, but any network service can be secured with SSH.” (en.wikipedia.org)
+    * `ssh -v` för att debugga problem
+
+---
+
+> ”Secure Shell (SSH) is a cryptographic network protocol for operating network services securely over an unsecured network. Typical applications include remote command-line, login, and remote command execution, but any network service can be secured with SSH.” (en.wikipedia.org)
 
 ---
 # ssh
@@ -362,17 +372,19 @@ li {
 * Använder sig av publik nyckel-kryptering
 * `ssh-keygen` för att skapa nyckelpar (rsa är standard)
     *  Utöver RSA finns: DSA, ECDSA, Ed25519 
+    * Sätt alltid lösenord på nyckelfilen!!!
 * Defaultport 22
 
 ---
 # ssh
 
 * `man ssh` för att hitta diverse varianter
-    *  Exempel: `ssh <server> -p <port> -l <login>`
+    * Exempel: `ssh <user>@<server> -p <port>`
+    * Exempel: `ssh -L 80:intra.example.com:80 gw.example.com`
 * Två olika sätt att logga in:
     * Lösenord (inte rekommenderat)
     * Login med privat nyckel som matchar den som finns på servern (rekommenderat)
-* `~/.ssh/authorized_keys`
+* Lägg publik nyckel i `~/.ssh/authorized_keys` på servern
 
 ---
 
@@ -496,7 +508,44 @@ done
 
 ---
 
- Tillbakablick, reflektion, kommentarer ... ... sedan skall vi prata om gruppuppgiften.
+# Miljövariabler (_environment vars_)
+
+* Nyckel-värde-par: `FOO=bar`
+* Vanligtvis upper-case
+* Satt per shell environment
+* `env` för att se dina variabler
+* `PATH`
+* Sätt i nuvarande shell: `export FOO=bar`
+* Exekvera kommando med variabel satt: `env FOO=bar ./myscript.sh`
+* Används ofta för att mata hemligheter till program
+
+---
+
+# Övning 7
+
+Skriv ett script som hälsar på användaren baserat på den fördefinerade miljövariablen `$USER`.
+
+Testa också att köra scriptet men att skriva över värdet på `USER` med hjälp av `env`
+
+---
+
+# Övning 7: Lösning
+
+```bash
+nevyn@itinf-nevyn:~$ cat 01.07-env.sh 
+#!/usr/bin/env bash
+
+echo "Hello, $USER!"
+nevyn@itinf-nevyn:~$ ./01.07-env.sh 
+Hello, nevyn!
+nevyn@itinf-nevyn:~$ env USER=sofia ./01.07-env.sh 
+Hello, sofia!
+```
+
+
+---
+
+Tillbakablick, reflektion, kommentarer ... ... sedan skall vi prata om gruppuppgiften.
 
 ---
 
@@ -539,4 +588,5 @@ done
 * Redovisningen skall presentera resonemang om hur ni valt era miljöer och varför
 * Redovisningen skall innehålla ett element av riskanalys
 * Redovisningen skall visa en demo av hur ni byggt miljöerna
+* Berätta vem som haft huvudansvar för vilka delar av uppgiften (även om ni givetvis hjälpts åt att lösa alla delar).
 * Redovisningen bör ta 10-15 minuter per grupp
