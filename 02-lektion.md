@@ -408,8 +408,17 @@ done
 
 # Övning 5
 
-* Testa att föra över en fil med scp respektive med sftp. Det går att köra mot localhost.
-   * Vad behöver du ha igång på din dator för att det skall fungera?
+Testa att hämta följande fil med scp respektive med sftp. Använd nedanstående uppgifter (eller kör mot localhost).
+
+```
+IP:      10.6.69.100
+Filnamn: message.txt
+User:    linux2
+Pass:    nackademin
+```
+
+
+Fråga: vad behöver du ha igång på din dator för att scp/sftp skall fungera?
 
 
 ---
