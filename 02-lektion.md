@@ -213,18 +213,29 @@ kopplat till någonting i filens namn
 li {
   font-size: 28px;
 }
+ul {
+   float: left;
+   width: 500px;
+}
 </style>
+
 
 * `cp` – kopiera filer
    * `cp fil1 fil2`
    * `cp -r dir1 dir2`
-* `mv` – flytta filer
+* `mv` – flytta/döp om filer
    * `mv fil1 fil2`
 * `rm` – ta bort filer
    * `rm fil1`
    * `rm -r dir1`
+
+</ul><ul>
+
 * `touch` – markera en fil som läst
    * `touch fil1`
+* `mkdir` - skapa mapp
+   * `mkdir minmapp`
+   * `mkdir -p /var/log/minapp/errors`
 
 ---
 
