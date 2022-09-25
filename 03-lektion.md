@@ -22,7 +22,7 @@ footer: Nackademin HT 2022 • Linux 2 DEVOPS21 • Alloverse AB
 
 # Idag
 
-* Paket och installation med apt / yum
+* Paket och installation med `apt` / `yum`
 * Installationsexempel: Apache webbserver
 * Services – start etc manuellt resp vid boot
 * Cron och schemaläggning
@@ -57,20 +57,20 @@ footer: Nackademin HT 2022 • Linux 2 DEVOPS21 • Alloverse AB
 
 # Paket
 
-* tar (eller möjligen zip) för mera manuell hantering
-* apt (dpkg-paket) för Debian-familjen, bl a Ubuntu
-* yum (rpm-paket) för Red Hat-familjen, bl a Fedora
+* `tar` (eller möjligen `zip`) för mer manuell hantering
+* `apt` (dpkg-paket) för Debian-familjen, bl a Ubuntu
+* `yum` (rpm-paket) för Red Hat-familjen, bl a Fedora
 
 ---
 
 # apt
 
-* apt update
-* apt upgrade
-* apt install <package>
-* apt remove <package>
-* apt list --installed
-* apt list --upgradeable
+* `apt update` -- uppdatera _listan med paket_
+* `apt upgrade` -- uppgradera _ett specifikt paket_
+* `apt install <package>`
+* `apt remove <package>`
+* `apt list --installed`
+* `apt list --upgradeable`
 
 ---
 
@@ -87,7 +87,7 @@ maskin. Se efter vad du känner igen.
 
 När programmet är installerat är det redo att köra!
 
-Om programmet är en daemon/service/bakgrundsprocess, så måste den det instrueras att starta i bakgrunden mga systemd eller init.d. 
+Om programmet är en daemon/service/bakgrundsprocess, så måste den det instrueras att starta i bakgrunden mha `systemd` eller `init.d`. 
 
 (en daemon/service är något som ska vara igång hela tiden, snarare än något som startas av en användare manuellt när det behövs).
 
@@ -114,12 +114,8 @@ _(Wikipedia)_
 
 # systemd och systemctl
 
-* systemd är både namnet på ett paket av
-program för att initiera och hantera daemoner,
-och namnet på en daemon som är central för
-den hanteringen
-* Det kommando man mestadels använder heter
-systemctl
+* `systemd` är både namnet på ett paket av program för att initiera och hantera daemoner, och namnet på en daemon som är central för den hanteringen
+* Det kommando man mestadels använder heter `systemctl`
 
 ---
 
@@ -129,12 +125,21 @@ systemctl
 
 ---
 
+<style scoped>
+    li { font-size: 22pt;}
+</style>
+
 # init.d
 
 * Föregångaren till systemd (men används fortfarande)
-* `/etc/init.d/`
-* `/etc/rc.d/rc.[0-6]`
-* `/etc/inittab`
+* `/etc/init.d/` -- start/stop-script per daemon
+* `/etc/rc.d/rc.[0-6]` -- vad som ska starta för varje runlevel
+    * runlevel 0: stäng av dator
+    * runlevel 1: single-user/recovery
+    * runlevel 2-4: CLI utan/med nätverk
+    * runlevel 5: GUI
+    * runlevel 6: reboot
+* `/etc/inittab` -- legacy-fil som bestämmer vad som händer vid varje runlevel
 
 --- 
 
@@ -149,21 +154,21 @@ lägga in att de skall startas vid boot
 
 # systemctl
 
-* systemctl start <service>
-* systemctl status <service>
-* systemctl stop <service>
-* systemctl restart <service>
-* systemctl enable <service>
-* systemctl disable <service>
-* systemctl is-active <service>
+* `systemctl start <service>` -- starta nu
+* `systemctl stop <service>`
+* `systemctl enable <service>` -- starta vid boot
+* `systemctl disable <service>`
+* `systemctl status <service>`
+* `systemctl restart <service>`
+* `systemctl is-active <service>`
 
 --- 
 
 # systemctl
 
-* systemctl list-dependencies <service>
-* systemctl cat <service>
-* systemctl show <service>
+* `systemctl list-dependencies <service>`
+* `systemctl cat <service>`
+* `systemctl show <service>`
 
 ---
 
@@ -185,10 +190,9 @@ lägga in att de skall startas vid boot
 
 # Göra en egen service / daemon
 
-* Först behöver man förstås programmet som skall bli en service
-* Skapa en fil för servicen i `/etc/systemd/system/`
-    * (eller `/lib/systemd/system/`)
-* systemctl daemon-reload
+1. Först behöver man förstås programmet som skall bli en service
+2. Sen, skapa en fil för servicen i `/etc/systemd/system/` (eller `/lib/systemd/system/`)
+* `systemctl daemon-reload` för att be `systemd` läsa configfiler
 * Nu kan du starta din service
 
 ---
@@ -204,26 +208,26 @@ code {
 
 Mall från https://www.shubhamdipt.com/blog/how-to-create-a-systemd-service-in-linux/
 
-```
+```ini
 [Unit]
-Description=<description about this service>
+Description=<människo-läsbar beskrivning av tjänsten>
 
 [Service]
-User=<user e.g. root>
-WorkingDirectory=<directory_of_script e.g. /root>
-ExecStart=<script which needs to be executed>
+User=<kör som vem? t ex root>
+WorkingDirectory=<vad ska cwd vara för scriptet? t ex /tmp>
+ExecStart=<kommandorad för att starta scriptet>
 Restart=always
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=multi-user.target # betyder: runlevel 2, dvs när allt som behövs för CLI är igång
 ```
 
 ---
 
 # Övning 3
 
-* Skapa ett enkelt program med den enda funktionen att det skriver till en loggfil (välj själv var denna skall ligga) varje gång det startas, med tidsstämpel, och sedan lägger sig i en oändlig loop
-* Gör en daemon av detta program – den kan t ex heta simpled
+* Skapa ett enkelt program med den enda funktionen att det skriver till en loggfil (välj själv var denna skall ligga) varje gång det startas, med tidsstämpel, och sedan lägger sig i en oändlig loop som inte gör något
+* Gör en daemon av detta program – den kan t ex heta `exercise3d`
 * Starta din daemon, starta om den etc och kontrollera att den skriver till filen du pekat ut och ligger kvar som bakgrundsprocess.
 
 ---
@@ -232,14 +236,14 @@ WantedBy=multi-user.target
 
 ```bash
 #!/bin/bash
-myfile=/tmp/simpled.log
+myfile=/tmp/exercise3d.log
 timestamp=`date +%Y-%m-%d_%H-%M-%S`
 
 echo $timestamp ": started" >> $myfile;
 
 while true
 do
-    sleep 2
+    sleep 1
 done
 ```
 
@@ -247,14 +251,14 @@ done
 
 # Övning 3
 
-```
+```ini
 [Unit]
-Description=Simple demo service
+Description=Övning 3
 
 [Service]
-User=niklas
+User=nevyn
 WorkingDirectory=/var/scripts
-ExecStart=/var/scripts/simpled
+ExecStart=/var/scripts/exercise3d
 Restart=always
 
 [Install]
@@ -289,14 +293,14 @@ WantedBy=multi-user.target
 
 # Daemon kontra schemaläggning
 
-* Program som skall vara igång hela tiden, t ex för att det lyssnar efter förbindelser: daemon
-* Program som skall köras regelbundet, automatiskt, men är klart när det är klart: cronjob
+* Program som skall vara _igång hela tiden_, t ex för att det lyssnar efter förbindelser: **daemon**
+* Program som skall köras _regelbundet_, automatiskt, men är klart när det är klart: **cronjob**
 
 ---
 
 # Schemaläggning
 
-* crond
+* `crond`
 * Systemets schemaläggning i `/etc/crontab` och `/etc/cron.d/`
 * Användare kan också schemalägga användar-specifika jobb med `crontab`
 
@@ -325,6 +329,7 @@ li {
 * 3: dag av månad (1-31)
 * 4: månad av år (1-12)
 * 5: dag av vecka (0-7)
+* Stöd för listor (`1,2,3`) och intervall (`2-4`) och kombo (`1,3-4,7`)
 
 ```
 50 0 * * 1-5    /usr/bin/testscript.sh # 00:50 varje vardag
@@ -348,10 +353,10 @@ li {
 
 # Övning 5
 
-* Gör ett script som kontrollerar om daemonen apache2 är igång och skriver resultatet till en loggfil (som du själv väljer) med tidsstämpel.
-* Testkör ditt script.
+* Gör ett script som kontrollerar om daemonen `apache2` är igång och skriver resultatet till en loggfil (som du själv väljer) med tidsstämpel.
+* **Testkör ditt script** från terminal.
 * Lägg in ett cronjob som kör ditt script en gång per minut måndag-fredag varje vecka. Se att din loggfil fylls på.
-* När du testat en stund vill du nog ta bort cronjobet igen.
+* När du testat en stund vill du nog ta bort cronjobet igen 😅
 
 ---
 
@@ -382,7 +387,7 @@ li {
 * `/var/log/syslog` and `/var/log/messages` store all global system activity data, including startup messages. Debian-based systems like Ubuntu store this in `/var/log/syslog`, while Red Hat-based systems like RHEL or CentOS use `/var/log/messages`.
 * `/var/log/auth.log` and `/var/log/secure` store all security-related events such as logins, root user actions, and output from pluggable authentication modules (PAM). Ubuntu and Debian use `/var/log/auth.log`, while Red Hat and CentOS use `/var/log/secure`.
 * `/var/log/kern.log` stores kernel events, errors, and warning logs, which are particularly helpful for troubleshooting custom kernels.
-* `/var/log/cron` stores information about scheduled tasks (cron jobs). Use this data to verify that your cron jobs are running successfully.
+* `/var/log/cron` stores information about scheduled tasks (cron jobs). Use this data to verify that your cron jobs are running successfully. (_notera: inte sant i ubuntu! loggas till syslog_)
 
 _(Från https://www.loggly.com/ultimate-guide/linux-logging-basics/)_
 
@@ -452,17 +457,17 @@ status=0 aid=2)
 
 # Övning 6
 
-* Ta en titt i /var/log/apache2/
+* Ta en titt i `/var/log/apache2/`
     * Var letar du om du får ett fel i t ex en php-sida på din webbserver?
 
 ---
 
 # Intressanta loggar
 
-* /var/log/syslog
-* /var/log/boot.log
-* /var/log/auth.log
-* /var/log/faillog
+* `/var/log/syslog`
+* `/var/log/messages` (samma som `dmesg`) (`/var/log/boot.log` ibland)
+* `/var/log/auth.log`
+* `/var/log/faillog`, `faillog -a`
 
 ---
 
@@ -525,7 +530,7 @@ $ crontab -e
 
 ---
 
-```
+```ini
 $ cat /etc/systemd/system/changelogger.service
 [Unit]
 Description=Logs changes to /var/testfil1
