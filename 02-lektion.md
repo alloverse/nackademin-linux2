@@ -443,6 +443,17 @@ Fråga: vad behöver du ha igång på din dator för att scp/sftp skall fungera?
 
 ---
 
+# Bonus: `jq`
+
+Tolka och sök i JSON! Extremt användbart, speciellt i kombination med `curl`.
+
+```bash
+$ curl -s http://api.open-notify.org/iss-now.json | jq '.iss_position.longitude'
+"117.1762"
+```
+
+---
+
 <!-- _class: - invert - lead -->
 
 # <!--fit--> Filträd
