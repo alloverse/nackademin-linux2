@@ -344,7 +344,7 @@ done < fil1 > fil2
    * `find {sök i vilken mapp} {sökpredikat och andra uttryck}`
    * `find . -name "*.sh"`
    * `find . -newermt "2022-08-10"`
-   * Och till och med saker som `find . -name "*.png" -exec echo convert {} -resize 64x64 thumbs/{} \;`
+   * Och till och med saker som `find . -name "*.png" -exec convert {} -resize 64x64 thumbs/{} \;`
 * Oändligt med varianter! Se `man find`.
 
 ---
@@ -361,7 +361,7 @@ done < fil1 > fil2
 #!/bin/bash
 for i in `find . -name "*sh"`
 do
-   ls -l $i;
+   ls -l $i
 done
 ```
 
@@ -411,7 +411,7 @@ done
 Testa att hämta följande fil med scp respektive med sftp. Använd nedanstående uppgifter (eller kör mot localhost).
 
 ```
-IP:      10.6.69.100
+IP:      maniac.nevyn.nu
 Filnamn: message.txt
 User:    linux2
 Pass:    nackademin
