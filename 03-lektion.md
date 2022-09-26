@@ -500,7 +500,7 @@ md1=$(md5sum $filename)
 while true
 do
     sleep 10
-    md2==$(md5sum $filename)
+    md2=$(md5sum $filename)
     if [ "$md1" != "$md2" ]
     then
         timestamp=`date +%Y-%m-%d_%H-%M-%S`
