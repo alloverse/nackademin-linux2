@@ -484,6 +484,7 @@ li {
     * Var 10:e sekund kontrolleras ifall filen `/var/testfil1` ändrats. Om den ändrats skrivs ett radnummer (börja på 1), tidsstämpel och meddelandet att filen har ändrats till en logfil på lämpligt ställe.
     *  Varje gång logfilen innehåller minst 10 rader flyttas innehållet till slutet av en annan fil på lämpligt ställe, en bak-fil, och logfilen är tom tills nästa rad tillkommer.
     * En gång per timme raderas bak-filen.
+* Testa ditt script genom att manuellt ändra på `/var/testfil1/` så att ditt script plockar upp ändringen.
 * Fundera särskilt på om / hur det skall delas upp i flera program, och använd systemctl respektive crontab där det är tillämpligt.
 
 ---
