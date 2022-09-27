@@ -516,10 +516,10 @@ foobar.se.      3600  IN  MX   20 foobar-se.mx2.staysecuregroup.net.
 
 # Konfigurera DNS: egen bind-server!
 
-![bg 50%](img/dns-yt.png)
+Två potentiella resurser:
+* https://www.digitalocean.com/community/tutorials/how-to-configure-bind-as-a-private-network-dns-server-on-ubuntu-18-04
+* https://www.youtube.com/watch?v=EDBvowAOT4s
 
-<br><br><br><br><br><br><br>
-https://www.youtube.com/watch?v=EDBvowAOT4s
 
 ---
 
@@ -531,18 +531,67 @@ https://www.youtube.com/watch?v=EDBvowAOT4s
 
 # Övning 7
 
-Få din Linux-maskin att (tillfälligt) anse att den är name server för domänen exempel.se. Fortsätt skicka alla andra förfrågningar till den name server du använder just nu.
+Gör din Linux-maskin till en DNS-server med named, och gör så den är auktorativ för `exempel.se` (eller valfri annan domän).
+
+Fortsätt skicka alla andra förfrågningar till den name server du använder just nu.
 
 * Lägg minst in ett A record och ett CNAME record
 * Tänk på att backa upp relevanta filer innan du labbar, så att du enkelt kan gå tillbaka sedan
-* Ett omfattande exempel (som även får tjäna som demolösning) finns här: https://www.digitalocean.com/community/tutorials/how-to-configure-bind-as-a-private-network-dns-server-on-ubuntu-18-04
+
 
 ---
 
-# Övning 7
+# Övning 7: Lösning
 
-* Kommentar -- hur långt kom ni?
-* Någon som vill visa en egen demo?
+1. `apt install bind9 bind9utils bind9-doc`
+2. "Fortsätt skicka andra förfrågningar" => vi vill vara en "recursive resolver":
+    * `pico /etc/bind/named.conf.options`
+    * lägg till `forwarders { 1.1.1.1; };` för att säga att det är nästa hopp efter oss
+    * lägg till `allow-recursion { any; };` -- tillåt vem som helst att använda oss som recursive resolver
+
+---
+
+# Övning 7: Lösning
+
+3. I `/etc/bind`, använd db.local som template för vår zon: `sudo cp db.local db.minzon`
+4. Vi måste lägga zonen det i en conf-fil också!
+    * `sudo pico named.conf.local`
+    ```
+    zone "minzon" {
+            type master;
+            file "/etc/bind/db.minzon";
+    };
+    ```
+
+---
+
+# Övning 7: Lösning
+
+pro-tip: `tail -f /var/log/syslog` i ett separat terminal-fönster för att hitta fel. Och/eller, använd `named-checkconf`.
+
+5. Dags att editera vår zon. `pico /etc/bind/db.minzon`
+6. Ändra `@TTL` och "negative cache ttl" till 500
+7. Se till att lägga in rätt zon-namn i SOA: `@ IN  SOA minzon. root.localhost. (`
+8. Lägg in de A och CNAME records du vill ha
+
+---
+
+```
+$TTL    500
+@       IN      SOA     minzon.          root.localhost. (
+                              1         ; Serial
+                         604800         ; Refresh
+                          86400         ; Retry
+                        2419200         ; Expire
+                         500 )          ; Negative Cache TTL
+;
+@       IN      NS      localhost.
+@       IN      A       172.20.140.75
+nevyn   IN      A       172.20.140.75
+hej     IN      CNAME   nevyn.itinf
+```
+
+9. `sudo systemctl restart bind9`
 
 ---
 
