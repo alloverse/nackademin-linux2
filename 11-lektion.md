@@ -24,37 +24,55 @@ footer: Nackademin HT 2022 • Linux 2 DEVOPS21 • Alloverse AB
 # (onsdag)
 ---
 <!-- _class: - invert - lead -->
-# <!--fit--> Grupp 4
-# Forsman, Erik, Sanju
+# <!--fit--> Grupp 02
+# David Heidenberg, Oliver Matta, Patrik Sörensen, Ludwig Wahl, Marcus Gudmundsson
 ---
 <!-- _class: - invert - lead -->
-# <!--fit--> Grupp 6
-# Joakim, Albin, Marcus G, Max
----
-<!-- _class: - invert - lead -->
-# <!--fit--> Grupp 1
-# Fletcher, Berra, Zeran, Elias
----
-<!-- _class: - invert - lead -->
-# <!--fit--> Grupp 5
-# Victor, Dåkan, Marcus B, Lana, Li
----
-<!-- _class: - invert - gaia - lead -->
-# <!--fit--> Redovisningar
-# (torsdag)
----
-<!-- _class: - invert - lead -->
-# <!--fit--> Grupp 3
-# Farid, Pål, Zuhat, Arif, Shoreh
----
-<!-- _class: - invert - lead -->
-# <!--fit--> Grupp 7
-# Fredrik Barre, Fredrik Buö, Philip, Zsofia
+# <!--fit--> Grupp 03
+# Fredik Majberg, David Remahl, Fredrik Sergler
 
 ---
 <!-- _class: - invert - lead -->
-# <!--fit--> Grupp 2
-# Klas, Dennis, Ulf, Usko
+# <!--fit--> Grupp 05
+# Robert Ernlund, Victor Lager, Rasmus Regnell Jansson
+---
+<!-- _class: - invert - lead -->
+# <!--fit--> Grupp 01
+# Jonatan Bredenfeldt, Simon Kjellander, Jack Wirz, Bhakti Aryal
+
+---
+<!-- _class: - invert - lead -->
+# <!--fit--> Grupp 04
+# Yahya Al-Hammami, Mattias Bahnan, Martin Löf, Elliot Vikström
+
+---
+<!-- _class: - invert - gaia - lead -->
+# <!--fit--> Redovisningar
+# (torsdag, distans)
+---
+<!-- _class: - invert - lead -->
+# <!--fit--> Grupp 06
+# Oscar Brolin, Oskar Kuczynski, Isak Jansson, Cleodileia da Silva Vargas
+---
+<!-- _class: - invert - lead -->
+# <!--fit--> Grupp 09
+# Raheleh Mohebbi, Olof Backman, Josef, Battal Kayhan
+
+---
+<!-- _class: - invert - lead -->
+# <!--fit--> Grupp 08
+# Jonatan Norrby, Lukas Rozenek, kodrat mohammad, Carl Ringheim
+
+---
+<!-- _class: - invert - lead -->
+# <!--fit--> Grupp 10
+# Alexander Haddad
+
+---
+<!-- _class: - invert - lead -->
+# <!--fit--> Grupp 07
+# Tomas Zaia, Erhan Cömert, Ousman Senghore
+
 
 
 ---
